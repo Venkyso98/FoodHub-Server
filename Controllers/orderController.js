@@ -18,14 +18,28 @@ exports.postOrder = async (request, response, next) => {
   const foodDataCollection = mongoose.model("food", foodSchema, "foods");
   var totalAmount = 0;
   const restaurantId = cartData.cart.restaurantId;
-  console.log(restaurantId);
+  // console.log(restaurantId);
   const foodListCart = cartData.cart.foodList;
   // console.log("CardLisdt:",foodListDoc);
   const menuDetails = await restaurantDataCollection.find(
-    { _id: restaurantId }
-    // {menuDetails:{_id:{$in:['602b586dc298a4845c06552a']}}}
-  ).where('menuDetails._id').in(['602b586dc298a4845c06552a']);
-  console.log(menuDetails)
+    { _id: restaurantId }, 'menuDetails'
+  );
+  // console.log(menuDetails)
+  
+  var foodLists =[];
+  menuDetails[0].menuDetails.forEach((food) => {
+    console.log("FoodId", food);
+    var temp =foodListCart.find((food1) => { 
+      console.log("food1",food1);
+      return food1.foodId.toString() == food._id.toString();
+    });
+    if(temp!=undefined)
+    {
+      foodLists.push({foodItem:food,quantity:temp.quantity});
+    }
+  })
+  console.log("foodList", foodLists);
+  
   response.json(menuDetails);
   // restaurantDataCollection
   //   .findOne({ _id: restaurantId }, "menuDetails")
