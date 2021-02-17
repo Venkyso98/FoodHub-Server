@@ -8,7 +8,7 @@ exports.postUser = (request, response, next) => {
 
   const userDataCollection = mongoose.model('user',userSchema,'users');
 
-  if (request.body.role == "NU") {
+  if (request.body.role == "NU" || request.body.role == "RO" ) {
     const normalUser = new userDataCollection({
       firstName: request.body.firstName,
       lastName: request.body.lastName,

@@ -9,5 +9,6 @@ router.post("/postorder",orderController.postOrder);
 
 // router.post("/cart",userController.postCart);
 // router.get('/user',userController.getUser);
+router.post("/adddeliveryexecutive",orderController.addDeliveryExecutive);
 
 module.exports = router;

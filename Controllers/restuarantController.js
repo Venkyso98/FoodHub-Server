@@ -14,6 +14,7 @@ exports.postRestuarant = async (request, response, next) => {
     workingHours: request.body.workingHours,
     activityStatus: request.body.activityStatus,
     restaurantImages: request.body.restaurantImages,
+    restaurantCategory:request.body.restaurantCategory,
     restaurantRatings: request.body.restaurantRatings,
     userId: request.body.userId,
     menuDetails: request.body.menuDetails,

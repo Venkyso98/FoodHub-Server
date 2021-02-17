@@ -18,6 +18,11 @@ const deliveryExecutiveSchema = new mongoose.Schema({
     default: false,
   },
   deliveryExecutiveRatings: [ratingSchema],
+  deliveryExecutiveStatus:{
+    type:Boolean,
+    default:true,
+    required:true
+  }
 });
 
 module.exports = deliveryExecutiveSchema;

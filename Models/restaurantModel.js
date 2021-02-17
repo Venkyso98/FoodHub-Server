@@ -26,10 +26,16 @@ const restaurantSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  restaurantCategory: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   restaurantRatings: [
     {
       type: ratingSchema,
-    }
+    },
   ],
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -43,4 +49,4 @@ const restaurantSchema = new mongoose.Schema({
   ],
 });
 
-module.exports =  restaurantSchema;
+module.exports = restaurantSchema;

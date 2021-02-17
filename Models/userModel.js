@@ -44,23 +44,40 @@ const userSchema = new mongoose.Schema({
     restaurantId: {
       type: String,
       // required: true
-      default: "",
+     default: undefined
     },
-    foodList: [
-      {
-        _id: false,
-        foodId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "restaurant.menuDetails",
-          // required: true   //
-        }, //Ref of User ID
-        quantity: {
-          type: Number,
-          // required: true  //
+    foodList: {
+      type: [
+        {
+          _id: false,
+          foodId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "restaurant.menuDetails",
+            // required: true   //
+          }, //Ref of User ID
+          quantity: {
+            type: Number,
+            // required: true  //
+          },
         },
-        // required: true
-      },
-    ],
+      ],
+      default: undefined,
+    },
+    //  [
+    //   {
+    //     _id: false,
+    //     foodId: {
+    //       type: mongoose.Schema.Types.ObjectId,
+    //       ref: "restaurant.menuDetails",
+    //       // required: true   //
+    //     }, //Ref of User ID
+    //     quantity: {
+    //       type: Number,
+    //       // required: true  //
+    //     },
+    //     // required: true
+    //   },
+    // ],
   },
 });
 
@@ -114,17 +131,21 @@ userSchema.methods.removeFromCart = function (foodId) {
   const updatedCartItems = this.cart.foodList.filter((food) => {
     return food.foodId.toString() !== foodId.toString();
   });
-  if(updatedCartItems.length==0){
-      this.cart.restaurantId="";
+  if (updatedCartItems.length == 0) {
+    this.cart.restaurantId = "";
   }
   this.cart.foodList = updatedCartItems;
   return this.save();
 };
 
 userSchema.methods.clearCart = function () {
-    this.cart = { foodList: [] };
-    this.cart.restaurantId="";
-    return this.save();
-  };
+  this.cart = { foodList: [] };
+  this.cart.restaurantId = "";
+  return this.save();
+};
 
+userSchema.methods.changeDeliveryExecutiveStatus = function(){
+  this.deliveryExecutive.deliveryExecutiveStatus=!this.deliveryExecutive.deliveryExecutiveStatus;
+  return this.save();
+}
 module.exports = userSchema;

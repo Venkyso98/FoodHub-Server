@@ -15,19 +15,19 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  orderOtp:{
-      type:Number,
-      required:true
+  orderOtp: {
+    type: Number,
+    required: true,
   },
   orderStatus: {
     type: String,
     required: true,
-    enum: ["Placed", "Cancelled", "Accepted", "Completed", "Out For Delivery"],
+    enum: ["Placed", "Accepted", "Out For Delivery", "Completed", "Cancelled"],
   },
   orderDateAndTime: {
     type: Date,
     required: true,
-    default:Date.now()
+    default: Date.now(),
   },
   foodList: [
     {
@@ -52,5 +52,10 @@ const orderSchema = new mongoose.Schema({
   },
 });
 
+orderSchema.methods.addDeliveryExecutive = function (deliveryExecutiveId) {
+  this.deliveryExecutive = mongoose.Types.ObjectId(deliveryExecutiveId);
+  this.orderStatus="Accepted";
+  return this.save();
+};
 
-module.exports = mongoose.model("orderSchema", orderSchema);
+module.exports = orderSchema;

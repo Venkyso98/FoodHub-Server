@@ -1,0 +1,250 @@
+//Restaurant data fro testing
+{
+    "restaurantName": "Restaurant 1",
+    "restaurantLocation": {
+        "streetAddress": "Jamalpur",
+        "landmark": "",
+        "area": "Bapunagar",
+        "city": "Abad",
+        "zip": 380022,
+        "state": "Gujarat",
+        "country": "India",
+        "latitude": 3502.00,
+        "longitude": 2500.00
+    },
+    "workingHours": {
+        "start": 9,
+        "end": 8
+    },
+    "activityStatus": true,
+    "restaurantImages": "https://images.unsplash.com/photo-1531897875706-73e91f9cd5ad?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdHVhcmFudHN8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    "restaurantCategory":["Italian","Maxican"],
+    "restaurantRatings": [
+        {
+            "userId": "602a22f830eb367f10def707",
+            "rating": 4.0
+        }
+    ],
+    "userId": "602a22f830eb367f10def707",
+    "menuDetails": [
+        {
+            "foodName": "Food 11",
+            "foodType": "Veg",
+            "foodCategory": "Pizza",
+            "foodDescription": "Amazing Food for health",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 100,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 4
+                }
+            ]
+        },
+        {
+            "foodName": "Food 12",
+            "foodType": "Non-Veg",
+            "foodCategory": "Burger",
+            "foodDescription": "Amazing and delicious Food",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 200,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 4.5
+                }
+            ]
+        },
+        {
+            "foodName": "Food 13",
+            "foodType": "Veg",
+            "foodCategory": "Paneer",
+            "foodDescription": "Amazing and delicious Food and testy",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 300,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 3.5
+                }
+            ]
+        },
+        {
+            "foodName": "Food 14",
+            "foodType": "Non-Veg",
+            "foodCategory": "Burger",
+            "foodDescription": "Amazing dish",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 400,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 4.5
+                }
+            ]
+        },
+        {
+            "foodName": "Food 15",
+            "foodType": "Non-Veg",
+            "foodCategory": "Burger",
+            "foodDescription": "Good dish",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 500,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 2.5
+                }
+            ]
+        }
+    ]
+}
+
+{
+    "restaurantName": "Restaurant 2",
+    "restaurantLocation": {
+        "streetAddress": "Gota bridge",
+        "landmark": "",
+        "area": "Bapunagar",
+        "city": "Abad",
+        "zip": 382745,
+        "state": "Gujarat",
+        "country": "India",
+        "latitude": 4000.00,
+        "longitude": 200.00
+    },
+    "workingHours": {
+        "start": 7,
+        "end": 5
+    },
+    "activityStatus": true,
+    "restaurantImages": "https://images.unsplash.com/photo-1531897875706-73e91f9cd5ad?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdHVhcmFudHN8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    "restaurantCategory":["Punjabi","Kathiyawadi"],
+    "restaurantRatings": [
+        {
+            "userId": "602a22f830eb367f10def707",
+            "rating": 4.0
+        }
+    ],
+    "userId": "602a22f830eb367f10def707",
+    "menuDetails": [
+        {
+            "foodName": "Food 21",
+            "foodType": "Non-Veg",
+            "foodCategory": "Sweet",
+            "foodDescription": "Food from restaurant 2 amazing",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 2100,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 1
+                }
+            ]
+        },
+        {
+            "foodName": "Food 22",
+            "foodType": "Veg",
+            "foodCategory": "Biryani",
+            "foodDescription": "Food are testy and spicy",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 2200,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 2.5
+                }
+            ]
+        },
+        {
+            "foodName": "Food 23",
+            "foodType": "Non-Veg",
+            "foodCategory": "Paneer",
+            "foodDescription": "Amazing and delicious with paneer",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 2300,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 4.9
+                }
+            ]
+        },
+        {
+            "foodName": "Food 24",
+            "foodType": "Veg",
+            "foodCategory": "Desert",
+            "foodDescription": "Amazing dish with sweet desert",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 2400,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 4.0
+                }
+            ]
+        },
+        {
+            "foodName": "Food 25",
+            "foodType": "Veg",
+            "foodCategory": "Stater",
+            "foodDescription": "Best Starter ever",
+            "foodImage": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "foodPrice": 2500,
+            "foodRating": [
+                {
+                    "userId": "60250fbe01ab938e4c9f3757",
+                    "rating": 3.8
+                }
+            ]
+        }
+    ]
+}
+
+
+
+******************************
+User
+
+{
+    "deliveryExecutive": {
+        "deliveryExecutiveLocation": {
+            "streetAddress": "Godrej gardens",
+            "landmark":"",
+            "area":"Varachha",
+            "city": "Surat",
+            "zip": 123456,
+            "state": "gujarta",
+            "country": "India",
+            "latitude": 1203.4,
+            "longitude": 1204.3
+        },
+        "vehicleNumber": "manan",
+        "activityStatus": true,
+        "deliveryExecutiveRatings": [{
+            "userId":"602a222d15d24555c4ecc2da",
+            "rating":2.5
+        }],
+        deliveryExecutiveStatus:true
+    },
+    "role":"DE",
+    "firstName": "VVedcand",
+    "lastName": "parikh",
+    "email": "vgs@testNormalUser.com",
+    "password": "12345678",
+    "birthDate": "2121-12-20T18:30:00.000Z",
+    "gender": "male",
+    "mobileNumber": 1234567895
+}
+
+*************************Normal User
+{
+    "role":"DE",
+    "firstName": "VVedcand",
+    "lastName": "parikh",
+    "email": "vgs@testNormalUser.com",
+    "password": "12345678",
+    "birthDate": "2121-12-20T18:30:00.000Z",
+    "gender": "male",
+    "mobileNumber": 1234567895
+}
