@@ -5,22 +5,25 @@ const orderSchema = require("../Models/orderModel");
 const userSchema = require("../Models/userModel");
 const restaurantSchema = require("../Models/restaurantModel");
 const foodSchema = require("../Models/foodModel");
+const otpGenerator = require('otp-generator')
 
+// when user places an order
 exports.postOrder = async (request, response, next) => {
   const userId = request.body.userId;
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userDataCollection = mongoose.model("user", userSchema, "users");
-  const cartData = await userDataCollection.findById({ _id: userId }, "cart");
+  const userData = await userDataCollection.findById({ _id: userId }, "cart");
   const restaurantDataCollection = mongoose.model(
     "restaurant",
     restaurantSchema,
     "restaurants"
   );
-  // const foodDataCollection = mongoose.model("food", foodSchema, "foods");
+  console.log("userDataCart"+userData.cart);
+  const cartData=userData.cart;
   var totalAmount = 0;
-  const restaurantId = cartData.cart.restaurantId;
+  const restaurantId = cartData.restaurantId;
   console.log(restaurantId);
-  const foodListCart = cartData.cart.foodList;
+  const foodListCart = cartData.foodList;
 
   const restaurantMenuDetails = await restaurantDataCollection.find(
     { _id: restaurantId },
@@ -42,47 +45,21 @@ exports.postOrder = async (request, response, next) => {
       totalAmount += food.foodPrice * temp.quantity;
     }
   });
+  const generatedOrderOtp =otpGenerator.generate(6, { upperCase: false, specialChars: false ,alphabets:false });
+  console.log("Otp:",generatedOrderOtp);
   const orderObj = new orderDataCollection({
     userId: userId,
     orderLocation: request.body.orderLocation,
     totalAmount: totalAmount,
-    orderOtp: 123456,
+    orderOtp: generatedOrderOtp,
     orderStatus: "Placed",
     foodList: orderFoodList,
     restaurantDetails: restaurantDetails,
   });
   orderObj.save();
+  userData.clearCart();
+
   response.json(orderObj);
 };
 
-exports.addDeliveryExecutive = async (request, response, next) => {
-  const deliverExecutiveUserId = request.body.userId;
-  const orderId = request.body.orderId;
-  const userDataCollection = mongoose.model("user", userSchema, "users");
-  const orderDataCollection = mongoose.model("order", orderSchema, "orders");
-  var orderData = await orderDataCollection.findById({ _id: orderId });
-  const deliveryExecutiveData = await userDataCollection.findById({
-    _id: deliverExecutiveUserId,
-  });
 
-  if (orderData.orderStatus != "Cancelled") {
-    if (deliveryExecutiveData.deliveryExecutive.deliveryExecutiveStatus) {
-      if (orderData.orderStatus == "Placed") {
-        orderData.addDeliveryExecutive(deliverExecutiveUserId);
-        deliveryExecutiveData.changeDeliveryExecutiveStatus();
-      }else{
-        console.log("someone already accepted the order")
-        // Show message to delivery Executive that someone already accepted the order
-      } 
-    } else {
-      console.log("you have already accepted one order")
-      // Show message to delivery Executive that you have already accepted one order
-    }
-  } else {
-    console.log("order is cancelled you can't accept it")
-    // show message to delivery Executive that order is cancelled you can't accept it
-  }
-
-  console.log("orderData", orderData);
-  response.json(orderData);
-};

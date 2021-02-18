@@ -148,4 +148,6 @@ userSchema.methods.changeDeliveryExecutiveStatus = function(){
   this.deliveryExecutive.deliveryExecutiveStatus=!this.deliveryExecutive.deliveryExecutiveStatus;
   return this.save();
 }
+
+
 module.exports = userSchema;

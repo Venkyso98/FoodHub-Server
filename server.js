@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 const userRoute = require("./Routes/userRoute");
 const cartRoute = require("./Routes/cartRoute");
 const restaurantRoute = require("./Routes/restaurantRoute");
-// const deliveryRoute = require("./Routes/deliveryRoute");
+const deliveryRoute = require("./Routes/deliveryRoute");
 const orderRoute = require("./Routes/orderRoute");
 
 dotenv.config();
@@ -17,7 +17,7 @@ app.use("/user", userRoute);
 app.use("/cart", cartRoute);
 app.use("/restaurant", restaurantRoute);
 app.use("/order", orderRoute);
-// app.use("/delivery", deliveryRoute);
+app.use("/delivery", deliveryRoute);
 
 mongoose.connect(
   process.env.CONNECTION_STRING,

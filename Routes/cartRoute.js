@@ -12,5 +12,6 @@ router.post("/addtocart",cartController.addToCart);
 router.post("/reducequantitytocart",cartController.reduceQuantity);
 router.post("/removefromcart",cartController.removeFromCart);
 router.post("/clearcart",cartController.clearCart);
+router.post("/getcart",cartController.getCart);
 
 module.exports = router;

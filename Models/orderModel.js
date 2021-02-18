@@ -58,4 +58,8 @@ orderSchema.methods.addDeliveryExecutive = function (deliveryExecutiveId) {
   return this.save();
 };
 
+orderSchema.methods.changeOrderStatus = function(orderStatus){
+    this.orderStatus=orderStatus;
+    return this.save();
+}
 module.exports = orderSchema;
