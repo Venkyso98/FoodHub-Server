@@ -3,6 +3,8 @@ const { request, response } = require("express");
 const  mongoose = require("mongoose");
 const userSchema  = require('../Models/userModel');
 
+
+
 exports.postUser = (request, response, next) => {
   console.log("In Post User Controller");
 
