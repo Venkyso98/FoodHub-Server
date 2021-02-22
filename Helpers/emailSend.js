@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 var smtpTransport = require("nodemailer-smtp-transport");
 
-const sendMails = function (mailList,subject,) {
+const sendMails = function (mailList,subject,html) {
   let mailTransporter = nodemailer.createTransport(
     smtpTransport({
       host: "172.27.172.202",
