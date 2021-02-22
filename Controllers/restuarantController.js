@@ -30,3 +30,25 @@ exports.postRestuarant = async (request, response, next) => {
   });
 };
 
+
+exports.getRestaurants = async(request,response,next)=>{
+
+  const restaurantDataCollection = mongoose.model('restaurant',restaurantSchema,'restaurants');
+  const allRestaurantData= await restaurantDataCollection.find();
+  console.log(allRestaurantData);
+  response.status(200).json(allRestaurantData);
+
+}
+
+exports.getRestaurantsById = async(request,response,next)=>{
+
+  const restaurantId=request.params.restaurantId;
+  const restaurantDataCollection = mongoose.model('restaurant',restaurantSchema,'restaurants');                                             
+  const restaurantData=await restaurantDataCollection.findById(restaurantId);
+
+  if(restaurantData!=null){
+    response.status(200).json(restaurantData);
+  }else{
+    response.status(400).json({message:"Restaurant is not available"});
+  }
+}

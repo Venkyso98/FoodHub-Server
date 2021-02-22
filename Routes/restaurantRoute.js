@@ -1,13 +1,13 @@
 const express = require("express");
 const { mongoose } = require("mongoose");
 
-const restuarantController = require("../Controllers/restuarantController");
+const restaurantController = require("../Controllers/restuarantController");
 
 const router = express.Router(); 
 
-// router.post("/register-restuarant",restuarantController.postRestuarant);
 
-// router.get('/user',userController.getUser);
-router.post("/registerrestuarant",restuarantController.postRestuarant);
+router.post("/registerrestaurant",restaurantController.postRestuarant);
+router.get("/getrestaurants",restaurantController.getRestaurants);
+router.get("/getrestaurantbyid/:restaurantId",restaurantController.getRestaurantsById);
 
 module.exports = router;
