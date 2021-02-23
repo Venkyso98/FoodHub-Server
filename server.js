@@ -14,21 +14,14 @@ const orderRoute = require("./Routes/orderRoute");
 dotenv.config();
 
 app.use(express.json());
-// app.use(cors());
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, PUT, PATCH, DELETE"
-//   );
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   next();
-// });
+app.use(cors());
+
 app.use("/user", userRoute);
 app.use("/cart", cartRoute);
 app.use("/restaurant", restaurantRoute);
 app.use("/order", orderRoute);
 app.use("/delivery", deliveryRoute);
+
 mongoose.connect(
   process.env.CONNECTION_STRING,
   { useNewUrlParser: true, useUnifiedTopology: true },
