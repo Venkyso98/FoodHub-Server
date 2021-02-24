@@ -38,14 +38,16 @@ exports.postOrder = async (request, response, next) => {
     console.log(restaurantId);
     const foodListCart = cartData.foodList;
 
-    const restaurantMenuDetails = await restaurantDataCollection.find(
+    const restaurantMenuDetails = await restaurantDataCollection.findOne(
       { _id: restaurantId },
-      "menuDetails restaurantName"
+      "menuDetails restaurantName restaurantLocation restaurantImages"
     );
     console.log(restaurantMenuDetails);
     const restaurantDetails = {
       restaurantId: restaurantId,
-      restaurantName: restaurantMenuDetails[0].restaurantName,
+      restaurantName: restaurantMenuDetails.restaurantName,
+      restaurantLocation: restaurantMenuDetails.restaurantLocation,
+      restaurantImages:restaurantMenuDetails.restaurantImages
     };
     console.log("restaurantDetails : ", restaurantDetails);
     var orderFoodList = []; // for order
@@ -104,10 +106,21 @@ exports.getUserOrder = async (request, response, next) => {
   const userId = request.body.userId;
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userDataCollection = mongoose.model("user", userSchema, "users");
-  const userOrderData = await orderDataCollection.find({ userId: userId });
+  const userOrderData = await orderDataCollection.find({
+    $and:[
+      { userId: userId },
+      {
+        $or: [
+          { orderStatus: "Cancelled" },
+          { orderStatus: "Completed" },
+        ],
+      },
+    ]
+  }
+  );
   response.status(200).json(userOrderData);
   console.log(userOrderData);
-};
+}
 
 // track user order
 exports.getUserTrackOrder = async (request, response, next) => {
@@ -143,7 +156,7 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
   const orderId = request.params.orderId
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   try{
-    const orderData = await orderDataCollection.find({
+    const orderData = await orderDataCollection.findOne({
       $and: [
         { userId: mongoose.Types.ObjectId(userId)},
         { _id: mongoose.Types.ObjectId(orderId)}
@@ -160,18 +173,16 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
   }catch(err){
     response.status(400).json({ message: "Order not found!!!" });
   }
-  
 };
-
 //************ order route api for delivery executive */
 
 exports.getPlacedOrderForDeliveryExecutive = async(request,response,next)=>{
-  auth.authApi(request, response, next);
-  const deliverExecutiveId = request.body.userId;
-  // const deliverExecutiveId = "60337214b6321007e88f00be";
+  //auth.authApi(request, response, next);
+  //const deliverExecutiveId = request.body.userId;
+  const deliverExecutiveId = "6035ee0a28c5fe5acc33eca3";
   const userDataCollection = mongoose.model("user", userSchema, "users");
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
-  const deliveryExecutiveData=await userDataCollection.findById({_id:deliverExecutiveId},'deliveryExecutive.deliveryExecutiveLocation.city');
+  const deliveryExecutiveData=await userDataCollection.findById({_id:mongoose.Types.ObjectId(deliverExecutiveId)},'deliveryExecutive.deliveryExecutiveLocation.city');
 
   console.log("Order status:",deliveryExecutiveData);
   console.log("Order City",deliveryExecutiveData.deliveryExecutive.deliveryExecutiveLocation.city);
