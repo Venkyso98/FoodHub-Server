@@ -22,6 +22,7 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "nodemon": "^2.0.7",
     "otp-generator": "^2.0.0",
+    "package.json": "^2.0.1",
     "promise": "^8.1.0"
   }
 }

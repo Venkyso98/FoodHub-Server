@@ -2,6 +2,8 @@ const nodemailer = require("nodemailer");
 var smtpTransport = require("nodemailer-smtp-transport");
 
 const sendMails = function (mailList,subject,html) {
+
+  console.log("Generated otp is:",html);
   let mailTransporter = nodemailer.createTransport(
     smtpTransport({
       host: "172.27.172.202",
@@ -18,10 +20,10 @@ const sendMails = function (mailList,subject,html) {
 
   let mailDetails = {
     from: "CEL@evolvingsols.com",
-    to: ["chiragbhaip@cybage.com","venkteshs@cybage.com"],
-    subject: "Test mail:",
+    to: mailList,
+    subject:subject,
     text: "Otp is",
-    html: "<p>genreateOtp</p>",
+    html: "<h3>Your OTP:"+html+"</h3>",
   };
 
   mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -33,4 +35,7 @@ const sendMails = function (mailList,subject,html) {
   });
 };
 
-sendMails();
+module.exports = {
+  sendMails
+}
+

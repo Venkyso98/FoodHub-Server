@@ -5,9 +5,16 @@ const orderController = require("../Controllers/orderController");
 
 const router = express.Router(); 
 
+// order route for user
 router.post("/postorder",orderController.postOrder);
+router.get("/getuserorder",orderController.getUserOrder);
+router.get("/getusertrackorder",orderController.getUserTrackOrder);
+router.get("/getorderdetailbyorderid/:orderId",orderController.getOrderDetailByOrderId);
 
-// router.post("/cart",userController.postCart);
-// router.get('/user',userController.getUser);
+// order route for delivery executive
+router.get("/getplacedorderfordeliveryexecutive",orderController.getPlacedOrderForDeliveryExecutive);
+
+
+
 module.exports = router;                                                                                            
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   

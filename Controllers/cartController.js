@@ -76,7 +76,7 @@ exports.addToCart = async (request, response, next) => {
   if (foodId == undefined || foodId == null) {
     response.status(400).json({ message: "Food is not added" });
   }
-  // const userId = request.body.userId;
+  const userId = request.body.userId;
   const restaurantId = request.body.restaurantId;
   const userDataCollection = mongoose.model("user", userSchema, "users");
 
@@ -92,7 +92,7 @@ exports.reduceQuantity = async (request, response, next) => {
   auth.authApi(request, response, next);                      // authenticated api gets the userId and role
   console.log("In reduceQuantity");
   const foodId = request.body.foodId;
-  // const userId = request.body.userId;
+  const userId = request.body.userId;
   const userDataCollection = mongoose.model("user", userSchema, "users");
   userDataCollection.findById(userId).then((user) => {
     console.log("IN reduce item to cart");
@@ -105,7 +105,7 @@ exports.removeFromCart = async (request, response, next) => {
   auth.authApi(request, response, next);  
   console.log("In removeFromCart");
   const foodId = request.body.foodId;                            // authenticated api gets the userId and role
-  // const userId = request.body.userId;
+  const userId = request.body.userId;
   const userDataCollection = mongoose.model("user", userSchema, "users");
   userDataCollection.findById(userId).then((user) => {
     console.log("IN reduce item to cart");
@@ -117,7 +117,7 @@ exports.removeFromCart = async (request, response, next) => {
 exports.clearCart = async (request, response, next) => {
   auth.authApi(request, response, next);                     // authenticated api gets the userId and role
   console.log("In Clear Cart");
-  // const userId = request.body.userId;
+  const userId = request.body.userId;
   const userDataCollection = mongoose.model("user", userSchema, "users");       // accessing the model
   userDataCollection.findById(userId).then((user) => {
     console.log("IN reduce item to cart");

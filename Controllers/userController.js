@@ -27,6 +27,7 @@ exports.authenticate = async (request, response, next) => {
 
 exports.postUser = (request, response, next) => {
   console.log("In Post User Controller");
+
   const userDataCollection = mongoose.model("user", userSchema, "users");
 
   if (request.body.role == "NU" || request.body.role == "RO") {
@@ -50,13 +51,15 @@ exports.postUser = (request, response, next) => {
         console.log("Error:", error);
         next(error);
       });
-  } else if (request.body.role == "DE") {
+  } 
+  
+  else if (request.body.role == "DE") {
 
     const deliveryExecutiveUser = new userDataCollection({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.email,
-      password: request.body.password,
+      password: bcrypt.hashSync(request.body.password,10),
       birthDate: request.body.birthDate,
       gender: request.body.gender,
       mobileNumber: request.body.mobileNumber,
