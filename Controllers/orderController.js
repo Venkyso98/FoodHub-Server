@@ -51,7 +51,7 @@ exports.postOrder = async (request, response, next) => {
     };
     console.log("restaurantDetails : ", restaurantDetails);
     var orderFoodList = []; // for order
-    restaurantMenuDetails[0].menuDetails.forEach((food) => {
+    restaurantMenuDetails.menuDetails.forEach((food) => {
       var temp = foodListCart.find((food1) => {
         return food1.foodId.toString() == food._id.toString();
       });
@@ -92,6 +92,7 @@ exports.postOrder = async (request, response, next) => {
           .json({ message: "Order created Successfully", orderObj });
       })
       .catch((err) => {
+        console.log(err);
         response.status(500).json({
           message: "Internal Server Error",
           error: err,
