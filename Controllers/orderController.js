@@ -13,6 +13,9 @@ const sendEmail = require("../Helpers/emailSend");
 
 // when user places an order
 exports.postOrder = async (request, response, next) => {
+
+  console.log("In post ORDER====================");
+  
   auth.authApi(request, response, next);
   const userId = request.body.userId;
   console.log("User ID", userId);

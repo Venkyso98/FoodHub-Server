@@ -45,6 +45,16 @@ const orderSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    restaurantLocation:{
+      type: addressSchema,
+      required: true,
+    },
+    restaurantImages: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   deliveryExecutive: {
     type: mongoose.Schema.Types.ObjectId,
