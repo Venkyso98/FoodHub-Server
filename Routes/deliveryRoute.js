@@ -7,5 +7,5 @@ const router = express.Router();
 
 router.post("/adddeliveryexecutive",deliveryController.addDeliveryExecutive);
 router.post("/changeorderstatus",deliveryController.changeOrderStatus);
-
+router.get("/getorderdetailacceptedbydeliveryexecutive",deliveryController.getOrderDetailAcceptedByDeliveryExecutive);
 module.exports = router;

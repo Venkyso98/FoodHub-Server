@@ -82,3 +82,35 @@ exports.changeOrderStatus = async (request, response, next) => {
   }
   response.json(orderData);
 };
+
+// get order which is accepted by delivery executive
+exports.getOrderDetailAcceptedByDeliveryExecutive = async (request, response, next) => {
+  // auth.authApi(request, response, next);
+  // const deliverExecutiveId = request.body.userId;
+  const deliverExecutiveId = "6035ee0a28c5fe5acc33eca3";
+  
+  const orderDataCollection = mongoose.model("order", orderSchema, "orders");
+  try{
+    const orderData = await orderDataCollection.findOne({
+      $and: [
+        { deliveryExecutive: mongoose.Types.ObjectId(deliverExecutiveId)},
+        {
+          $or: [
+            { orderStatus: "Accepted" },
+            { orderStatus: "Out For Delivery" },
+          ],
+        },
+      ],
+    });
+    console.log(orderData.length);
+    if (orderData.length == 0) {
+      response
+        .status(200)
+        .json({ message: "Order not found!!!" });
+    } else {
+      response.status(200).json(orderData);
+    }
+  }catch(err){
+    response.status(400).json({ message: "Order not found!!!" });
+  }
+};
