@@ -63,11 +63,12 @@ exports.changeOrderStatus = async (request, response, next) => {
 //   console.log("orderData",orderData);
   if(orderStatus=="Out For Delivery"){
     if(orderData.orderStatus=="Accepted"){
-        orderData.changeOrderStatus(orderStatus);
+      orderData.changeOrderStatus(orderStatus);
+      response.status(200).json({message:"Order status is changed to out for delivery"})
     }else if(orderData.orderStatus=="Out For Delivery"){
         console.log("Order staus is already in out for delivery");
         // Order status is already in out for delivery
-      response.status(200).json({message:"Order staus is already in out for delivery"})
+      response.status(200).json({message:"Order status is already in out for delivery"})
     }else{
         console.log("Order is not Accepted by you");
         // Order is not Accepted by you
@@ -95,7 +96,7 @@ exports.changeOrderStatus = async (request, response, next) => {
         response.status(200).json({message:"Order is not for out for delivery"})
     }
   }
-  response.json(orderData);
+  // response.json(orderData);
 };
 
 // get order which is accepted by delivery executive

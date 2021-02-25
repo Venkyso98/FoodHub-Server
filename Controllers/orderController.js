@@ -1,4 +1,7 @@
-const { request, response } = require("express");
+const {
+  request,
+  response
+} = require("express");
 const Promise = require("promise");
 const mongoose = require("mongoose");
 const orderSchema = require("../Models/orderModel");
@@ -15,15 +18,16 @@ const sendEmail = require("../Helpers/emailSend");
 exports.postOrder = async (request, response, next) => {
 
   console.log("In post ORDER====================");
-  
+
   auth.authApi(request, response, next);
   const userId = request.body.userId;
   console.log("User ID", userId);
 
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userDataCollection = mongoose.model("user", userSchema, "users");
-  const userData = await userDataCollection.findById(
-    { _id: userId },
+  const userData = await userDataCollection.findById({
+      _id: userId
+    },
     "cart email"
   );
   const restaurantDataCollection = mongoose.model(
@@ -33,7 +37,9 @@ exports.postOrder = async (request, response, next) => {
   );
   console.log("userDataCart=============" + userData.cart);
   if (userData.cart.foodList == null || userData.cart.restaurantId == "") {
-    response.status(400).json({ message: "Cart doesn't contain any items" });
+    response.status(400).json({
+      message: "Cart doesn't contain any items"
+    });
   } else {
     const cartData = userData.cart;
     var totalAmount = 0;
@@ -41,8 +47,9 @@ exports.postOrder = async (request, response, next) => {
     console.log(restaurantId);
     const foodListCart = cartData.foodList;
 
-    const restaurantMenuDetails = await restaurantDataCollection.findOne(
-      { _id: restaurantId },
+    const restaurantMenuDetails = await restaurantDataCollection.findOne({
+        _id: restaurantId
+      },
       "menuDetails restaurantName restaurantLocation restaurantImages"
     );
     console.log(restaurantMenuDetails);
@@ -50,7 +57,7 @@ exports.postOrder = async (request, response, next) => {
       restaurantId: restaurantId,
       restaurantName: restaurantMenuDetails.restaurantName,
       restaurantLocation: restaurantMenuDetails.restaurantLocation,
-      restaurantImages:restaurantMenuDetails.restaurantImages
+      restaurantImages: restaurantMenuDetails.restaurantImages
     };
     console.log("restaurantDetails : ", restaurantDetails);
     var orderFoodList = []; // for order
@@ -59,7 +66,10 @@ exports.postOrder = async (request, response, next) => {
         return food1.foodId.toString() == food._id.toString();
       });
       if (temp != undefined) {
-        orderFoodList.push({ foodItem: food, quantity: temp.quantity });
+        orderFoodList.push({
+          foodItem: food,
+          quantity: temp.quantity
+        });
         totalAmount += food.foodPrice * temp.quantity;
       }
     });
@@ -92,7 +102,10 @@ exports.postOrder = async (request, response, next) => {
         userData.clearCart();
         response
           .status(201)
-          .json({ message: "Order created Successfully", orderObj });
+          .json({
+            message: "Order created Successfully",
+            orderObj
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -111,17 +124,20 @@ exports.getUserOrder = async (request, response, next) => {
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userDataCollection = mongoose.model("user", userSchema, "users");
   const userOrderData = await orderDataCollection.find({
-    $and:[
-      { userId: userId },
+    $and: [{
+        userId: userId
+      },
       {
-        $or: [
-          { orderStatus: "Cancelled" },
-          { orderStatus: "Completed" },
+        $or: [{
+            orderStatus: "Cancelled"
+          },
+          {
+            orderStatus: "Completed"
+          },
         ],
       },
     ]
-  }
-  );
+  });
   response.status(200).json(userOrderData);
   console.log(userOrderData);
 }
@@ -132,13 +148,19 @@ exports.getUserTrackOrder = async (request, response, next) => {
   const userId = request.body.userId;
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userOrderData = await orderDataCollection.find({
-    $and: [
-      { userId: userId },
+    $and: [{
+        userId: userId
+      },
       {
-        $or: [
-          { orderStatus: "Placed" },
-          { orderStatus: "Accepted" },
-          { orderStatus: "Out For Delivery" },
+        $or: [{
+            orderStatus: "Placed"
+          },
+          {
+            orderStatus: "Accepted"
+          },
+          {
+            orderStatus: "Out For Delivery"
+          },
         ],
       },
     ],
@@ -147,7 +169,9 @@ exports.getUserTrackOrder = async (request, response, next) => {
   if (userOrderData.length == 0) {
     response
       .status(200)
-      .json({ message: "You haven't placed any order yet!!!" });
+      .json({
+        message: "You haven't placed any order yet!!!"
+      });
   } else {
     response.status(200).json(userOrderData);
   }
@@ -159,54 +183,70 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
   const userId = request.body.userId;
   const orderId = request.params.orderId
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
-  try{
+  try {
     const orderData = await orderDataCollection.findOne({
-      $and: [
-        { userId: mongoose.Types.ObjectId(userId)},
-        { _id: mongoose.Types.ObjectId(orderId)}
+      $and: [{
+          userId: mongoose.Types.ObjectId(userId)
+        },
+        {
+          _id: mongoose.Types.ObjectId(orderId)
+        }
       ],
     });
     console.log(orderData.length);
     if (orderData.length == 0) {
       response
         .status(200)
-        .json({ message: "Order not found!!!" });
+        .json({
+          message: "Order not found!!!"
+        });
     } else {
       response.status(200).json(orderData);
     }
-  }catch(err){
-    response.status(400).json({ message: "Order not found!!!" });
+  } catch (err) {
+    response.status(400).json({
+      message: "Order not found!!!"
+    });
   }
 };
 //************ order route api for delivery executive */
 
-exports.getPlacedOrderForDeliveryExecutive = async(request,response,next)=>{
+exports.getPlacedOrderForDeliveryExecutive = async (request, response, next) => {
   //auth.authApi(request, response, next);
   //const deliverExecutiveId = request.body.userId;
   const deliverExecutiveId = "6035ee0a28c5fe5acc33eca3";
   const userDataCollection = mongoose.model("user", userSchema, "users");
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
-  const deliveryExecutiveData=await userDataCollection.findById({_id:mongoose.Types.ObjectId(deliverExecutiveId)},'deliveryExecutive.deliveryExecutiveLocation.city');
+  const deliveryExecutiveData = await userDataCollection.findById({
+    _id: mongoose.Types.ObjectId(deliverExecutiveId)
+  }, 'deliveryExecutive.deliveryExecutiveLocation.city');
 
-  console.log("Order status:",deliveryExecutiveData);
-  console.log("Order City",deliveryExecutiveData.deliveryExecutive.deliveryExecutiveLocation.city);
-  const orderCity=deliveryExecutiveData.deliveryExecutive.deliveryExecutiveLocation.city;
-  try{
+  console.log("Order status:", deliveryExecutiveData);
+  console.log("Order City", deliveryExecutiveData.deliveryExecutive.deliveryExecutiveLocation.city);
+  const orderCity = deliveryExecutiveData.deliveryExecutive.deliveryExecutiveLocation.city;
+  try {
     const orderData = await orderDataCollection.find({
-      $and: [
-        { "orderLocation.city":orderCity},
-        { orderStatus: "Placed" },
+      $and: [{
+          "orderLocation.city": orderCity
+        },
+        {
+          orderStatus: "Placed"
+        },
       ],
     });
     console.log(orderData);
     if (orderData.length == 0) {
       response
         .status(200)
-        .json({ message: "No order found in your city!!!" });
+        .json({
+          message: "No order found in your city!!!"
+        });
     } else {
       response.status(200).json(orderData);
     }
-  }catch(err){
-    response.status(400).json({ message: "No order found in your city!!!" });
+  } catch (err) {
+    response.status(400).json({
+      message: "No order found in your city!!!"
+    });
   }
 }
