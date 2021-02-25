@@ -179,9 +179,12 @@ exports.getUserTrackOrder = async (request, response, next) => {
 
 //show perticular one order for summary
 exports.getOrderDetailByOrderId = async (request, response, next) => {
-  auth.authApi(request, response, next);
+  //auth.authApi(request, response, next);
   const userId = request.body.userId;
-  const orderId = request.params.orderId
+  const orderId = request.body.orderId
+  // const orderId = request.params.orderId
+  const userDataCollection = mongoose.model("user", userSchema, "users");
+
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   try {
     const orderData = await orderDataCollection.findOne({
@@ -193,6 +196,7 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
         }
       ],
     });
+    
     console.log(orderData.length);
     if (orderData.length == 0) {
       response
@@ -201,7 +205,14 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
           message: "Order not found!!!"
         });
     } else {
-      response.status(200).json(orderData);
+      if(orderData.deliveryExecutive!=null){
+        const deliveryExecutiveData=await userDataCollection.findById(mongoose.Types.ObjectId(orderData.deliveryExecutive),'firstName lastName mobileNumber deliveryExecutive.vehicleNumber');
+        console.log(deliveryExecutiveData);
+        response.status(200).json({orderData:orderData,deliveryExecutiveData:deliveryExecutiveData});
+      }else{
+
+        response.status(200).json({orderData:orderData});
+      }
     }
   } catch (err) {
     response.status(400).json({
@@ -250,3 +261,4 @@ exports.getPlacedOrderForDeliveryExecutive = async (request, response, next) => 
     });
   }
 }
+

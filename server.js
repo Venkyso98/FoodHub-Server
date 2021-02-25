@@ -10,7 +10,7 @@ const cartRoute = require("./Routes/cartRoute");
 const restaurantRoute = require("./Routes/restaurantRoute");
 const deliveryRoute = require("./Routes/deliveryRoute");
 const orderRoute = require("./Routes/orderRoute");
-
+const rateRoute=require("./Routes/rateRoute");
 dotenv.config();
 
 app.use(express.json());
@@ -21,6 +21,7 @@ app.use("/cart", cartRoute);
 app.use("/restaurant", restaurantRoute);
 app.use("/order", orderRoute);
 app.use("/delivery", deliveryRoute);
+app.use("/rate",rateRoute);
 
 mongoose.connect(
   process.env.CONNECTION_STRING,
