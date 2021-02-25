@@ -1,4 +1,7 @@
-const { request, response } = require("express");
+const {
+  request,
+  response
+} = require("express");
 const mongoose = require("mongoose");
 const restaurantSchema = require("../Models/restaurantModel");
 const userSchema = require("../Models/restaurantModel");
@@ -41,37 +44,93 @@ exports.getRestaurants = async (request, response, next) => {
     restaurantSchema,
     "restaurants"
   );
-  const allRestaurantData = await restaurantDataCollection.aggregate([
-    {
-      $addFields: {
-        rating_avg: {
-          $avg: {
-            $map: {
-              input: "$restaurantRatings",
-              as: "restRating",
-              in: "$$restRating.rating",
-            },
+  const allRestaurantData = await restaurantDataCollection.aggregate([{
+    $addFields: {
+      rating_avg: {
+        $avg: {
+          $map: {
+            input: "$restaurantRatings",
+            as: "restRating",
+            in: "$$restRating.rating",
           },
         },
       },
     },
-  ]);
+  }, ]);
   console.log(allRestaurantData);
   response.status(200).json(allRestaurantData);
 };
 
 exports.getRestaurantsById = async (request, response, next) => {
-  const restaurantId = request.params.restaurantId;
+  const restaurantId = mongoose.Types.ObjectId(request.params.restaurantId);
   const restaurantDataCollection = mongoose.model(
     "restaurant",
     restaurantSchema,
     "restaurants"
   );
-  const restaurantData = await restaurantDataCollection.findById(restaurantId);
-
+  const restaurantData = await restaurantDataCollection.aggregate([{
+      "$match": {
+        "_id": restaurantId
+      }
+    },
+    {
+      "$addFields": {
+        "rating_avg": {
+          "$avg": {
+            "$map": {
+              "input": "$restaurantRatings",
+              "as": "restRating",
+              "in": "$$restRating.rating"
+            }
+          }
+        }
+      }
+    }
+  ])
+  let foodList=[];
+  let avgRating = 0;
+  restaurantData[0].menuDetails.forEach((food)=>{
+      avgRating=food.foodRating.reduce((total,current)=>total+current.rating,0)/food.foodRating.length;
+    food.avgRating = avgRating;  
+    foodList.push(food);
+  })
+  console.log("foodList :",foodList)
+  restaurantData[0].menuDetails = foodList;
   if (restaurantData != null) {
-    response.status(200).json(restaurantData);
+    response.status(200).json(restaurantData[0]);
   } else {
-    response.status(400).json({ message: "Restaurant is not available" });
+    response.status(400).json({
+      message: "Restaurant is not available"
+    });
   }
 };
+
+exports.getTopRestaurants = (req, res, next) => {
+  const restaurantDataCollection = mongoose.model(
+    "restaurant",
+    restaurantSchema,
+    "restaurants"
+  );
+  restaurantDataCollection.aggregate([
+      {
+          "$addFields": {
+              "rating_avg": {
+                  "$avg": {
+                      "$map": {
+                          "input": "$restaurantRatings",
+                          "as": "restRating",
+                          "in": "$$restRating.rating"
+                      }
+                  }
+              }
+          }
+      },
+      { "$sort": { "rating_avg": -1 } }
+  ])
+      .limit(6)
+      .exec(function (err, result) {
+          if (err) throw err;
+          console.log(result);
+          res.send(result);
+      });
+}

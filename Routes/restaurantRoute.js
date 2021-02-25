@@ -9,5 +9,6 @@ const router = express.Router();
 router.post("/registerrestaurant",restaurantController.postRestuarant);
 router.get("/getrestaurants",restaurantController.getRestaurants);
 router.get("/getrestaurantbyid/:restaurantId",restaurantController.getRestaurantsById);
+router.get("/gettoprestaurants",restaurantController.getTopRestaurants);
 
 module.exports = router;

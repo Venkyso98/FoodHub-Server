@@ -13,7 +13,7 @@ const ratingSchema = new mongoose.Schema({
     },
     ratingReview: {
         type: String,
-        required:true,
+        required:false,
     },
     ratingDateTime: {
         type: Date,

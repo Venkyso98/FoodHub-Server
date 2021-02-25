@@ -4,8 +4,11 @@ const orderSchema = require("../Models/orderModel");
 const userSchema = require("../Models/userModel");
 const restaurantSchema = require("../Models/restaurantModel");
 const foodSchema = require("../Models/foodModel");
+const auth = require("../Helpers/authApi");
 
 exports.addDeliveryExecutive = async (request, response, next) => {
+
+  auth.authApi(request, response, next);                    // invokes the authenticated api and allows only after user is logged in
   const deliverExecutiveUserId = request.body.userId;
   const orderId = request.body.orderId;
 
@@ -22,21 +25,25 @@ exports.addDeliveryExecutive = async (request, response, next) => {
       if (orderData.orderStatus == "Placed") {
         orderData.addDeliveryExecutive(deliverExecutiveUserId);
         deliveryExecutiveData.changeDeliveryExecutiveStatus();
+        response.status(200).json({message:"you have accepted the order"})
       } else {
         console.log("someone already accepted the order");
+        response.status(200).json({ message: "someone already accepted the order" });
         // Show message to delivery Executive that someone already accepted the order
       }
     } else {
       console.log("you have already accepted one order");
+      response.status(200).json({message:"you have already accepted one order"})
       // Show message to delivery Executive that you have already accepted one order
     }
   } else {
     console.log("order is cancelled you can't accept it");
+    response.status(200).json({message:"order is cancelled you can't accept it"})
     // show message to delivery Executive that order is cancelled you can't accept it
   }
 
-  console.log("orderData", orderData);
-  response.json(orderData);
+  // console.log("orderData", orderData);
+  // response.json(orderData);
 };
 
 exports.changeOrderStatus = async (request, response, next) => {
