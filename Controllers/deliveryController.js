@@ -40,7 +40,9 @@ exports.addDeliveryExecutive = async (request, response, next) => {
 };
 
 exports.changeOrderStatus = async (request, response, next) => {
-  const deliverExecutiveUserId = request.body.userId;
+  // auth.authApi(request, response, next);
+  // const deliverExecutiveId = request.body.userId;
+  const deliverExecutiveUserId = "6035ee0a28c5fe5acc33eca3";
   const orderId = request.body.orderId;
   const orderStatus = request.body.orderStatus;
   
@@ -58,26 +60,32 @@ exports.changeOrderStatus = async (request, response, next) => {
     }else if(orderData.orderStatus=="Out For Delivery"){
         console.log("Order staus is already in out for delivery");
         // Order status is already in out for delivery
+      response.status(200).json({message:"Order staus is already in out for delivery"})
     }else{
         console.log("Order is not Accepted by you");
         // Order is not Accepted by you
+        response.status(200).json({message:"Order is not Accepted by you"})
     }
   }else if(orderStatus=="Completed"){
     const orderOtp=request.body.orderOtp;
     if(orderData.orderStatus=="Out For Delivery"){
         if(orderData.orderOtp==orderOtp){
             orderData.changeOrderStatus(orderStatus);
-            deliveryExecutiveData.changeDeliveryExecutiveStatus();
+          deliveryExecutiveData.changeDeliveryExecutiveStatus();
+          response.status(200).json({message:"Order Status Change completed"})
         }else{
             console.log("Order OTP is not valid");
             // Otp is not valid
+            response.status(200).json({message:"Otp is not valid"})
         }
     }else if(orderData.orderStatus=="Completed"){
         console.log("Order is already completed");
         // order is already completed
+        response.status(200).json({message:"Order is already completed"})
     }else {
         console.log("Order is not for out for delivery");
         // Order is not for out for delivery
+        response.status(200).json({message:"Order is not for out for delivery"})
     }
   }
   response.json(orderData);
