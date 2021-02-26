@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const otpGenerator = require("otp-generator");
 const sendEmail = require("../Helpers/emailSend");
+const auth = require("../Helpers/authApi");
 
 const userDataCollection = mongoose.model("user", userSchema, "users");
 
@@ -55,11 +56,54 @@ exports.postUser = async (request, response, next) => {
     })
 };
 
-exports.sendOtpForForgotPassword = async(request,response,next)=>{
-  
-  const email=request.body.email;
-  var userData=await userDataCollection.findOne({email:email});
-  if(userData){
+//get user data for profile 
+exports.getUser = async(request,response,next)=>{
+    //auth.authApi(request, response, next);
+  const userId = request.body.userId;
+  try{
+    var userData = await userDataCollection.findById(userId);
+    if(userData){
+      response.status(200).json(userData);
+    }else{
+      response.status(400).json({message:"User is not found with provided data"});
+    }
+  }catch(err){
+    response.status(400).json({message:"User is not found with provided data"});
+  }
+}
+
+//update both use profile
+exports.updateProfile = async (request, response, next) => {
+  //auth.authApi(request, response, next);
+  const userId = request.body.userId;
+  var userData = await userDataCollection.findById(userId);
+  const firstName = request.body.firstName;
+  const lastName = request.body.lastName;
+  const mobileNumber = request.body.mobileNumber;
+  const updatedata = {
+    firstName: firstName,
+    lastName: lastName,
+    mobileNumber: mobileNumber,
+  }
+  if (userData.role == "DE") {
+    const deliveryExecutiveLocation = request.body.deliveryExecutiveLocation;
+    const vehicleNumber = request.body.vehicleNumber;
+    const deliveryExecutive = {
+      deliveryExecutiveLocation: deliveryExecutiveLocation,
+      vehicleNumber: vehicleNumber
+    }
+    updatedata.deliveryExecutive = deliveryExecutive;
+  }
+  console.log(updatedata);
+  // userData.updateUserProfile(updatedata);
+}
+
+//send otp to user module for reset password and also send the otp in response 
+exports.sendOtpForForgotPassword = async (request, response, next) => {
+
+  const email = request.body.email;
+  var userData = await userDataCollection.findOne({ email: email });
+  if (userData) {
     const generatedForgotPasswordOtp = otpGenerator.generate(6, {
       upperCase: false,
       specialChars: false,
@@ -67,27 +111,28 @@ exports.sendOtpForForgotPassword = async(request,response,next)=>{
     });
     const html = generatedForgotPasswordOtp;
     sendEmail.sendMails([email], "Foodizz Reset Password OTp", html);
-    response.status(200).json({forgotPasswordOtp:generatedForgotPasswordOtp,message:"Check you email inbox. OTP Send Succeccfully!!!"});  
-  }else{
-    response.status(200).json({message:"User is not exist with this email"});  
+    response.status(200).json({ forgotPasswordOtp: generatedForgotPasswordOtp, message: "Check you email inbox. OTP Send Succeccfully!!!" });
+  } else {
+    response.status(200).json({ message: "User is not exist with this email" });
   }
 }
 
-exports.resetPassword = async(request,response,next)=>{
-  const email=request.body.email;
-  const newPassword=request.body.newPassword;
-  var userData=await userDataCollection.findOne({email:email});
-  if(userData){
-    userData=await userData.resetPassword(bcrypt.hashSync(newPassword, 10));
+// reset password in database
+exports.resetPassword = async (request, response, next) => {
+  const email = request.body.email;
+  const newPassword = request.body.newPassword;
+  var userData = await userDataCollection.findOne({ email: email });
+  if (userData) {
+    userData = await userData.resetPassword(bcrypt.hashSync(newPassword, 10));
     // console.log("bcrypt : ",bcrypt.compareSync(newPassword, userData.password))
     // console.log("useData :",userData);
 
-    if(userData){
-     response.status(200).json({message:"Your Password is reset successfully"});
-    }else{
-      response.status(200).json({message:"Your Password is not reset successfully"});
+    if (userData) {
+      response.status(200).json({ message: "Your Password is reset successfully" });
+    } else {
+      response.status(200).json({ message: "Your Password is not reset successfully" });
     }
-  }else{
-    response.status(200).json({message:"Your Password is not reset successfully"});
+  } else {
+    response.status(200).json({ message: "Your Password is not reset successfully" });
   }
 }
