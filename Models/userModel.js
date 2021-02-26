@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    // unique: true
+    unique: true
   },
   password: {
     type: String,
@@ -149,5 +149,9 @@ userSchema.methods.changeDeliveryExecutiveStatus = function(){
   return this.save();
 }
 
+userSchema.methods.resetPassword =function(newPassword){
+  this.password=newPassword;
+  return this.save();
+}
 
 module.exports = userSchema;
