@@ -74,7 +74,7 @@ exports.getUser = async(request,response,next)=>{
 
 //update both use profile
 exports.updateProfile = async (request, response, next) => {
-  //auth.authApi(request, response, next);
+  auth.authApi(request, response, next);
   const userId = request.body.userId;
   var userData = await userDataCollection.findById(userId);
   const firstName = request.body.firstName;
@@ -94,8 +94,21 @@ exports.updateProfile = async (request, response, next) => {
     }
     updatedata.deliveryExecutive = deliveryExecutive;
   }
-  console.log(updatedata);
-  // userData.updateUserProfile(updatedata);
+  console.log("In api updateprofile",updatedata)
+  try{
+    useData=await userData.updateUserProfile(updatedata);
+    if(userData){
+      console.log(userData);
+      response.status(200).json({message:"Profile is update succefully"});
+    }else{
+      response.status(200).json({message:"Profile is'n updated Succefully"});
+    }
+  }catch(err){
+    if(err){
+      response.status(200).json({message:"Profile is'n updated Succefully"});
+    }
+  }
+  
 }
 
 //send otp to user module for reset password and also send the otp in response 
@@ -109,7 +122,29 @@ exports.sendOtpForForgotPassword = async (request, response, next) => {
       specialChars: false,
       alphabets: false,
     });
-    const html = generatedForgotPasswordOtp;
+    const html = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body style="background-color:#faf8f4; text-align: center;">
+        <div >
+            <img src = "https://files.slack.com/files-pri/T01KZ8MM4BY-F01PCQ4D5MK/chef.png" alt="" style="height:400px"></img> 
+         </div>
+         <div style= "font-size: 20px;">
+         Dear Customer,<br><br>
+         Thank you for being our valued customer. We are grateful for the pleasure of serving you and hope we met your expectations.<br><br>
+         You have made an order for which One Time Passsword (OTP) is:<br><br>
+         <div style="color:red ; font-size: 100px; font-weight: bold; ">
+            ${generatedForgotPasswordOtp}
+         </div>
+         <br>
+         In case you have any query, please call our Customer Care. You can also write an email at @foodPlaza.com.<br><br>
+         </div>
+    </body>
+    </html>`;
     sendEmail.sendMails([email], "Foodizz Reset Password OTp", html);
     response.status(200).json({ forgotPasswordOtp: generatedForgotPasswordOtp, message: "Check you email inbox. OTP Send Succeccfully!!!" });
   } else {

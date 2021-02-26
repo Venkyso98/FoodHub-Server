@@ -13,6 +13,8 @@ router.post("/authenticate", userController.authenticate);
 router.post("/sendotpforforgotpassword",userController.sendOtpForForgotPassword);
 router.post("/resetpassword",userController.resetPassword);
 router.get("/getuser",userController.getUser);
+router.post("/updateprofile",userController.updateProfile);
+
 // router.get('/current',authorize(), getCurrent);
 // router.get("/:id", authorize(), getById);
 // router.post("/cart",userController.postCart);
