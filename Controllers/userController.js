@@ -58,7 +58,7 @@ exports.postUser = async (request, response, next) => {
 
 //get user data for profile 
 exports.getUser = async(request,response,next)=>{
-    //auth.authApi(request, response, next);
+  auth.authApi(request, response, next);
   const userId = request.body.userId;
   try{
     var userData = await userDataCollection.findById(userId);
