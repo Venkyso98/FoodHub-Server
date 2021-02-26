@@ -10,7 +10,7 @@ router.post("/postorder",orderController.postOrder);
 router.get("/getuserorder",orderController.getUserOrder);
 router.get("/getusertrackorder",orderController.getUserTrackOrder);
 router.get("/getorderdetailbyorderid/:orderId",orderController.getOrderDetailByOrderId);
-router.get("/getorderdetailbyorderid",orderController.getOrderDetailByOrderId);
+// router.get("/getorderdetailbyorderid",orderController.getOrderDetailByOrderId);
 
 // order route for delivery executive
 router.get("/getplacedorderfordeliveryexecutive",orderController.getPlacedOrderForDeliveryExecutive);

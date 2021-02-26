@@ -25,6 +25,7 @@ exports.addDeliveryExecutive = async (request, response, next) => {
       if (orderData.orderStatus == "Placed") {
         orderData.addDeliveryExecutive(deliverExecutiveUserId);
         deliveryExecutiveData.changeDeliveryExecutiveStatus();
+        
         response.status(200).json({message:"you have accepted the order"})
       } else {
         console.log("someone already accepted the order");

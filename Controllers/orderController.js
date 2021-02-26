@@ -179,10 +179,10 @@ exports.getUserTrackOrder = async (request, response, next) => {
 
 //show perticular one order for summary
 exports.getOrderDetailByOrderId = async (request, response, next) => {
-  //auth.authApi(request, response, next);
+  auth.authApi(request, response, next);
   const userId = request.body.userId;
-  const orderId = request.body.orderId
-  // const orderId = request.params.orderId
+  // const orderId = request.body.orderId
+  const orderId = request.params.orderId
   const userDataCollection = mongoose.model("user", userSchema, "users");
 
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
@@ -197,24 +197,24 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
       ],
     });
     
-    console.log(orderData.length);
-    if (orderData.length == 0) {
+    console.log('order daata ==============', orderData);
+    if (orderData==null) {
       response
         .status(200)
         .json({
           message: "Order not found!!!"
         });
     } else {
-      if(orderData.deliveryExecutive!=null){
+      if(orderData.deliveryExecutive!=undefined){
         const deliveryExecutiveData=await userDataCollection.findById(mongoose.Types.ObjectId(orderData.deliveryExecutive),'firstName lastName mobileNumber deliveryExecutive.vehicleNumber');
         console.log(deliveryExecutiveData);
         response.status(200).json({orderData:orderData,deliveryExecutiveData:deliveryExecutiveData});
       }else{
-
         response.status(200).json({orderData:orderData});
       }
     }
   } catch (err) {
+    console.log('Error =======================', err);
     response.status(400).json({
       message: "Order not found!!!"
     });
