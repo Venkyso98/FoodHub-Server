@@ -189,28 +189,37 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
   try {
     const orderData = await orderDataCollection.findOne({
       $and: [{
-          userId: mongoose.Types.ObjectId(userId)
+          _id: mongoose.Types.ObjectId(orderId)
         },
         {
-          _id: mongoose.Types.ObjectId(orderId)
+          $or: [{
+            userId: mongoose.Types.ObjectId(userId)
+          }, {
+            deliveryExecutive: mongoose.Types.ObjectId(userId)
+          }],
         }
       ],
     });
-    
+
     console.log('order daata ==============', orderData);
-    if (orderData==null) {
+    if (orderData == null) {
       response
         .status(200)
         .json({
           message: "Order not found!!!"
         });
     } else {
-      if(orderData.deliveryExecutive!=undefined){
-        const deliveryExecutiveData=await userDataCollection.findById(mongoose.Types.ObjectId(orderData.deliveryExecutive),'firstName lastName mobileNumber deliveryExecutive.vehicleNumber');
+      if (orderData.deliveryExecutive != undefined) {
+        const deliveryExecutiveData = await userDataCollection.findById(mongoose.Types.ObjectId(orderData.deliveryExecutive), 'firstName lastName mobileNumber deliveryExecutive.vehicleNumber');
         console.log(deliveryExecutiveData);
-        response.status(200).json({orderData:orderData,deliveryExecutiveData:deliveryExecutiveData});
-      }else{
-        response.status(200).json({orderData:orderData});
+        response.status(200).json({
+          orderData: orderData,
+          deliveryExecutiveData: deliveryExecutiveData
+        });
+      } else {
+        response.status(200).json({
+          orderData: orderData
+        });
       }
     }
   } catch (err) {
@@ -261,4 +270,3 @@ exports.getPlacedOrderForDeliveryExecutive = async (request, response, next) => 
     });
   }
 }
-
