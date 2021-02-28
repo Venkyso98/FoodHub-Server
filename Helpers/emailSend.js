@@ -23,7 +23,7 @@ const sendMails = function (mailList,subject,html) {
     to: mailList,
     subject:subject,
     text: "Otp is",
-    html: "<h3>Your OTP:"+html+"</h3>",
+    html: html
   };
 
   mailTransporter.sendMail(mailDetails, function (err, data) {

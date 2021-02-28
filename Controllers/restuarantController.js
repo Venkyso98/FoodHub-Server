@@ -57,7 +57,6 @@ exports.getRestaurants = async (request, response, next) => {
       },
     },
   }, ]);
-  console.log(allRestaurantData);
   response.status(200).json(allRestaurantData);
 };
 
@@ -94,7 +93,6 @@ exports.getRestaurantsById = async (request, response, next) => {
     food.avgRating = avgRating;  
     foodList.push(food);
   })
-  // console.log("foodList :",foodList)
   restaurantData[0].menuDetails = foodList;
   if (restaurantData != null) {
     response.status(200).json(restaurantData[0]);
@@ -130,7 +128,6 @@ exports.getTopRestaurants = (req, res, next) => {
       .limit(6)
       .exec(function (err, result) {
           if (err) throw err;
-          console.log(result);
           res.send(result);
       });
 }
