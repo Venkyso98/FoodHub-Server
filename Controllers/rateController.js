@@ -24,6 +24,7 @@ exports.addRatingToDeliveryExecutive = async (request, response, next) => {
 
 
 exports.addRatingToFood = async (request, response, next) => {
+    auth.authApi(request, response, next);
     const userId = request.body.userId;
     const foodId = request.body.foodId;
     const restaurantId = request.body.restaurantId;
@@ -44,8 +45,10 @@ exports.addRatingToFood = async (request, response, next) => {
     response.json(ratingData);
 }
 exports.addRatingToRestaurant = async (request, response, next) => {
+    auth.authApi(request, response, next);
+    console.log("ratingRating")
     const userId = request.body.userId;
-    const restaurantId = request.body.restaurantId;
+    const restaurantId = mongoose.Types.ObjectId(request.body.restaurantId);
     const rating = request.body.rating;
     const ratingReview = request.body.ratingReview;
     const ratingObj = {
@@ -53,6 +56,7 @@ exports.addRatingToRestaurant = async (request, response, next) => {
         rating: rating,
         ratingReview: ratingReview,
     }
+    console.log("ratingRating",ratingObj)
     const ratingData = await restaurantDataCollection.findByIdAndUpdate({ _id: restaurantId }, { $push: { restaurantRatings: ratingObj } })
     response.json(ratingData);
 }
