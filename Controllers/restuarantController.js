@@ -137,6 +137,11 @@ exports.searchRestaurants = async (req, res, next) => {
   let city = req.query.city;
   let searchRestaurants
   let searchRegex, cityregex;
+  const restaurantDataCollection = mongoose.model(
+    "restaurant",
+    restaurantSchema,
+    "restaurants"
+  );
   if (search == '') {
       // searchRestaurants = await restaurantDataCollection.find({ 'restaurantLocation.city': city });
       searchRegex = new RegExp('^');
@@ -188,7 +193,20 @@ exports.searchRestaurants = async (req, res, next) => {
                   }
               ]
           }
-      }])
+      },{
+        "$addFields": {
+            "rating_avg": {
+                "$avg": {
+                    "$map": {
+                        "input": "$restaurantRatings",
+                        "as": "restRating",
+                        "in": "$$restRating.rating"
+                    }
+                }
+            }
+        }
+    },
+    { "$sort": { "rating_avg": -1 } }])
       res.send(searchRestaurants);
   }
   catch (err) {
