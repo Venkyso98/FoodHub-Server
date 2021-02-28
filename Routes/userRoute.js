@@ -3,6 +3,7 @@ const { mongoose } = require("mongoose");
 
 const userController = require("../Controllers/userController");
 const userSchema = require("../Models/userModel");
+const auth = require("../Helpers/authApi");
 
 const router = express.Router();
 
@@ -12,8 +13,8 @@ router.post("/registeruser", userController.postUser);
 router.post("/authenticate", userController.authenticate);
 router.post("/sendotpforforgotpassword",userController.sendOtpForForgotPassword);
 router.post("/resetpassword",userController.resetPassword);
-router.get("/getuser",userController.getUser);
-router.post("/updateprofile",userController.updateProfile);
+router.get("/getuser",auth.authAPI,userController.getUser);
+router.post("/updateprofile",auth.authAPI,userController.updateProfile);
 
 // router.get('/current',authorize(), getCurrent);
 // router.get("/:id", authorize(), getById);

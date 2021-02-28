@@ -16,11 +16,10 @@ exports.authenticate = async (request, response, next) => {
   const password = request.body.password;
   const userDataCollection = mongoose.model("user", userSchema, "users");
   const user = await userDataCollection.findOne({ email });
-
+ console.log(user);
   // generates the jwt token
   if (user && bcrypt.compareSync(password, user.password)) {
-    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
-    console.log(token);
+    const token = jwt.sign({ userId: user._id, email: user.email, password: user.password, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
     return response.status(200).json({ token: token, firstName: user.firstName })
 
   } else if (!user) {
@@ -58,7 +57,6 @@ exports.postUser = async (request, response, next) => {
 
 //get user data for profile 
 exports.getUser = async(request,response,next)=>{
-  auth.authApi(request, response, next);
   const userId = request.body.userId;
   try{
     var userData = await userDataCollection.findById(userId);
@@ -74,7 +72,6 @@ exports.getUser = async(request,response,next)=>{
 
 //update both use profile
 exports.updateProfile = async (request, response, next) => {
-  auth.authApi(request, response, next);
   const userId = request.body.userId;
   var userData = await userDataCollection.findById(userId);
   const firstName = request.body.firstName;
@@ -94,11 +91,9 @@ exports.updateProfile = async (request, response, next) => {
     }
     updatedata.deliveryExecutive = deliveryExecutive;
   }
-  console.log("In api updateprofile",updatedata)
   try{
     useData=await userData.updateUserProfile(updatedata);
     if(userData){
-      console.log(userData);
       response.status(200).json({message:"Profile is update succefully"});
     }else{
       response.status(200).json({message:"Profile is'n updated Succefully"});

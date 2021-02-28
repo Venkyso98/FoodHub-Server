@@ -18,10 +18,7 @@ const sendEmail = require("../Helpers/emailSend");
 exports.postOrder = async (request, response, next) => {
 
   console.log("In post ORDER====================");
-
-  auth.authApi(request, response, next);
   const userId = request.body.userId;
-  console.log("User ID", userId);
 
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userDataCollection = mongoose.model("user", userSchema, "users");
@@ -35,7 +32,6 @@ exports.postOrder = async (request, response, next) => {
     restaurantSchema,
     "restaurants"
   );
-  console.log("userDataCart=============" + userData.cart);
   if (userData.cart.foodList == null || userData.cart.restaurantId == "") {
     response.status(400).json({
       message: "Cart doesn't contain any items"
@@ -44,7 +40,6 @@ exports.postOrder = async (request, response, next) => {
     const cartData = userData.cart;
     var totalAmount = 0;
     const restaurantId = cartData.restaurantId;
-    console.log(restaurantId);
     const foodListCart = cartData.foodList;
 
     const restaurantMenuDetails = await restaurantDataCollection.findOne({
@@ -52,14 +47,12 @@ exports.postOrder = async (request, response, next) => {
       },
       "menuDetails restaurantName restaurantLocation restaurantImages"
     );
-    console.log(restaurantMenuDetails);
     const restaurantDetails = {
       restaurantId: restaurantId,
       restaurantName: restaurantMenuDetails.restaurantName,
       restaurantLocation: restaurantMenuDetails.restaurantLocation,
       restaurantImages: restaurantMenuDetails.restaurantImages
     };
-    console.log("restaurantDetails : ", restaurantDetails);
     var orderFoodList = []; // for order
     restaurantMenuDetails.menuDetails.forEach((food) => {
       var temp = foodListCart.find((food1) => {
@@ -80,7 +73,6 @@ exports.postOrder = async (request, response, next) => {
       specialChars: false,
       alphabets: false,
     });
-    console.log("Otp:", generatedOrderOtp);
 
     const orderObj = new orderDataCollection({
       userId: userId,
@@ -94,8 +86,6 @@ exports.postOrder = async (request, response, next) => {
     orderObj
       .save()
       .then((order) => {
-        console.log("Order is===", order);
-
         const html = generatedOrderOtp;
         sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
         // sends the mail to the user
@@ -119,7 +109,6 @@ exports.postOrder = async (request, response, next) => {
 
 // get all order of user
 exports.getUserOrder = async (request, response, next) => {
-  auth.authApi(request, response, next);
   const userId = request.body.userId;
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userDataCollection = mongoose.model("user", userSchema, "users");
@@ -139,12 +128,10 @@ exports.getUserOrder = async (request, response, next) => {
     ]
   });
   response.status(200).json(userOrderData);
-  console.log(userOrderData);
 }
 
 // track user order
 exports.getUserTrackOrder = async (request, response, next) => {
-  auth.authApi(request, response, next);
   const userId = request.body.userId;
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const userOrderData = await orderDataCollection.find({
@@ -165,7 +152,6 @@ exports.getUserTrackOrder = async (request, response, next) => {
       },
     ],
   });
-  console.log(userOrderData.length);
   if (userOrderData.length == 0) {
     response
       .status(200)
@@ -179,12 +165,10 @@ exports.getUserTrackOrder = async (request, response, next) => {
 
 //show perticular one order for summary
 exports.getOrderDetailByOrderId = async (request, response, next) => {
-  auth.authApi(request, response, next);
   const userId = request.body.userId;
-  // const orderId = request.body.orderId
-  const orderId = request.params.orderId
-  const userDataCollection = mongoose.model("user", userSchema, "users");
+  const orderId = request.params.orderId;
 
+  const userDataCollection = mongoose.model("user", userSchema, "users");
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   try {
     const orderData = await orderDataCollection.findOne({
@@ -201,7 +185,6 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
       ],
     });
 
-    console.log('order daata ==============', orderData);
     if (orderData == null) {
       response
         .status(200)
@@ -211,7 +194,6 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
     } else {
       if (orderData.deliveryExecutive != undefined) {
         const deliveryExecutiveData = await userDataCollection.findById(mongoose.Types.ObjectId(orderData.deliveryExecutive), 'firstName lastName mobileNumber deliveryExecutive.vehicleNumber');
-        console.log(deliveryExecutiveData);
         response.status(200).json({
           orderData: orderData,
           deliveryExecutiveData: deliveryExecutiveData
@@ -232,17 +214,13 @@ exports.getOrderDetailByOrderId = async (request, response, next) => {
 //************ order route api for delivery executive */
 
 exports.getPlacedOrderForDeliveryExecutive = async (request, response, next) => {
-  //auth.authApi(request, response, next);
-  //const deliverExecutiveId = request.body.userId;
-  const deliverExecutiveId = "6035ee0a28c5fe5acc33eca3";
+  const deliverExecutiveId = request.body.userId;
   const userDataCollection = mongoose.model("user", userSchema, "users");
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   const deliveryExecutiveData = await userDataCollection.findById({
     _id: mongoose.Types.ObjectId(deliverExecutiveId)
   }, 'deliveryExecutive.deliveryExecutiveLocation.city');
 
-  console.log("Order status:", deliveryExecutiveData);
-  console.log("Order City", deliveryExecutiveData.deliveryExecutive.deliveryExecutiveLocation.city);
   const orderCity = deliveryExecutiveData.deliveryExecutive.deliveryExecutiveLocation.city;
   try {
     const orderData = await orderDataCollection.find({
@@ -254,7 +232,6 @@ exports.getPlacedOrderForDeliveryExecutive = async (request, response, next) => 
         },
       ],
     });
-    console.log(orderData);
     if (orderData.length == 0) {
       response
         .status(200)

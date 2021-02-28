@@ -11,7 +11,6 @@ const auth = require("../Helpers/authApi");
 
 exports.addDeliveryExecutive = async (request, response, next) => {
 
-  auth.authApi(request, response, next); // invokes the authenticated api and allows only after user is logged in
   const deliverExecutiveUserId = request.body.userId;
   const orderId = request.body.orderId;
 
@@ -35,35 +34,30 @@ exports.addDeliveryExecutive = async (request, response, next) => {
           message: "you have accepted the order"
         })
       } else {
-        console.log("someone already accepted the order");
         response.status(200).json({
           message: "someone already accepted the order"
         });
         // Show message to delivery Executive that someone already accepted the order
       }
     } else {
-      console.log("you have already accepted one order");
       response.status(200).json({
         message: "you have already accepted one order"
       })
       // Show message to delivery Executive that you have already accepted one order
     }
   } else {
-    console.log("order is cancelled you can't accept it");
     response.status(200).json({
       message: "order is cancelled you can't accept it"
     })
     // show message to delivery Executive that order is cancelled you can't accept it
   }
 
-  // console.log("orderData", orderData);
-  // response.json(orderData);
+  
 };
 
 exports.changeOrderStatus = async (request, response, next) => {
-  auth.authApi(request, response, next);
-  const deliverExecutiveId = request.body.userId;
-  // const deliverExecutiveUserId = "6035ee0a28c5fe5acc33eca3";
+  
+  const deliverExecutiveUserId = request.body.userId;
   const orderId = request.body.orderId;
   const orderStatus = request.body.orderStatus;
 
@@ -84,13 +78,11 @@ exports.changeOrderStatus = async (request, response, next) => {
         message: "Order status is changed to out for delivery"
       })
     } else if (orderData.orderStatus == "Out For Delivery") {
-      console.log("Order staus is already in out for delivery");
       // Order status is already in out for delivery
       response.status(200).json({
         message: "Order status is already in out for delivery"
       })
     } else {
-      console.log("Order is not Accepted by you");
       // Order is not Accepted by you
       response.status(200).json({
         message: "Order is not Accepted by you"
@@ -106,20 +98,17 @@ exports.changeOrderStatus = async (request, response, next) => {
           message: "Order Status Change completed"
         })
       } else {
-        console.log("Order OTP is not valid");
         // Otp is not valid
         response.status(200).json({
           message: "Otp is not valid"
         })
       }
     } else if (orderData.orderStatus == "Completed") {
-      console.log("Order is already completed");
       // order is already completed
       response.status(200).json({
         message: "Order is already completed"
       })
     } else {
-      console.log("Order is not for out for delivery");
       // Order is not for out for delivery
       response.status(200).json({
         message: "Order is not for out for delivery"
@@ -131,10 +120,7 @@ exports.changeOrderStatus = async (request, response, next) => {
 
 // get order which is accepted by delivery executive
 exports.getOrderDetailAcceptedByDeliveryExecutive = async (request, response, next) => {
-  auth.authApi(request, response, next);
   const deliverExecutiveId = request.body.userId;
-  // const deliverExecutiveId = "6035ee0a28c5fe5acc33eca3";
-
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   try {
     const orderData = await orderDataCollection.findOne({
@@ -152,8 +138,7 @@ exports.getOrderDetailAcceptedByDeliveryExecutive = async (request, response, ne
         },
       ],
     });
-    console.log(orderData.length);
-    if (orderData.length == 0) {
+    if (orderData==null || orderData==undefined) {
       response
         .status(200)
         .json({
@@ -163,6 +148,7 @@ exports.getOrderDetailAcceptedByDeliveryExecutive = async (request, response, ne
       response.status(200).json(orderData);
     }
   } catch (err) {
+    console.log(err);
     response.status(400).json({
       message: "Order not found!!!"
     });
@@ -170,7 +156,6 @@ exports.getOrderDetailAcceptedByDeliveryExecutive = async (request, response, ne
 };
 
 exports.getDeliveryExecutivePastOrders = async (request, response, next) => {
-  auth.authApi(request, response, next);
   const deliverExecutiveId = request.body.userId;
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");
   try {
@@ -183,7 +168,6 @@ exports.getDeliveryExecutivePastOrders = async (request, response, next) => {
         }
       ],
     });
-    console.log(orderData.length);
     if (orderData.length == 0) {
       response
         .status(400)
@@ -194,6 +178,7 @@ exports.getDeliveryExecutivePastOrders = async (request, response, next) => {
       response.status(200).json(orderData);
     }
   } catch (err) {
+    console.log(err);
     response.status(400).json({
       message: "Order not found!!!"
     });
