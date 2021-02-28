@@ -20,6 +20,10 @@ const restaurantSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  restaurantType:{
+    type: String,
+    required: true
+  },
   restaurantLocation: {
     type: addressSchema,
     required: true,

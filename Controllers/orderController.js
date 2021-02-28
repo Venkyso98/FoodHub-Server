@@ -87,7 +87,7 @@ exports.postOrder = async (request, response, next) => {
       .save()
       .then((order) => {
         const html = generatedOrderOtp;
-        sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
+        // sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
         // sends the mail to the user
         userData.clearCart();
         response

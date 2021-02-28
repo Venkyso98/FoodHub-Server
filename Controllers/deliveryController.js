@@ -8,6 +8,9 @@ const userSchema = require("../Models/userModel");
 const restaurantSchema = require("../Models/restaurantModel");
 const foodSchema = require("../Models/foodModel");
 const auth = require("../Helpers/authApi");
+const nodemailer = require("nodemailer");
+var smtpTransport = require("nodemailer-smtp-transport");
+const sendEmail = require("../Helpers/emailSend");
 
 exports.addDeliveryExecutive = async (request, response, next) => {
 
@@ -29,7 +32,11 @@ exports.addDeliveryExecutive = async (request, response, next) => {
       if (orderData.orderStatus == "Placed") {
         orderData.addDeliveryExecutive(deliverExecutiveUserId);
         deliveryExecutiveData.changeDeliveryExecutiveStatus();
-
+        const userData=await userDataCollection.findById({_id:orderData.userId},'email');
+        console.log("userData for email",userData);
+        const html=orderData.orderOtp;
+        console.log("html ",html)
+        sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
         response.status(200).json({
           message: "you have accepted the order"
         })
