@@ -94,7 +94,7 @@ exports.getRestaurantsById = async (request, response, next) => {
     food.avgRating = avgRating;  
     foodList.push(food);
   })
-  console.log("foodList :",foodList)
+  // console.log("foodList :",foodList)
   restaurantData[0].menuDetails = foodList;
   if (restaurantData != null) {
     response.status(200).json(restaurantData[0]);
