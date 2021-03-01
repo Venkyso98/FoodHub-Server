@@ -16,12 +16,10 @@ exports.authenticate = async (request, response, next) => {
   const password = request.body.password;
   const userDataCollection = mongoose.model("user", userSchema, "users");
   const user = await userDataCollection.findOne({ email });
- console.log(user);
   // generates the jwt token
   if (user && bcrypt.compareSync(password, user.password)) {
     const token = jwt.sign({ userId: user._id, email: user.email, password: user.password, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
     return response.status(200).json({ token: token, firstName: user.firstName })
-
   } else if (!user) {
     response.status(404).json({ message: "User not found" });
   } else {
@@ -47,10 +45,8 @@ exports.postUser = async (request, response, next) => {
   normalUser
     .save((err, res) => {
       if (err) {
-        //console.log(err);
-        response.status(200).json({ message: "User is already exists with this email!!" });
+        response.status(409).json({ message: "User is already exists with this email!!" });
       }
-      //console.log(res);
       response.status(201).json({ message: "User Created Successfully" });
     })
 };

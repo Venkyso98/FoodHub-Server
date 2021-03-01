@@ -33,9 +33,7 @@ exports.addDeliveryExecutive = async (request, response, next) => {
         orderData.addDeliveryExecutive(deliverExecutiveUserId);
         deliveryExecutiveData.changeDeliveryExecutiveStatus();
         const userData=await userDataCollection.findById({_id:orderData.userId},'email');
-        console.log("userData for email",userData);
-        const html=orderData.orderOtp;
-        console.log("html ",html)
+        const html="Otp for order : "+orderData.orderOtp.toString();
         sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
         response.status(200).json({
           message: "you have accepted the order"

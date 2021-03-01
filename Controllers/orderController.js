@@ -17,7 +17,7 @@ const sendEmail = require("../Helpers/emailSend");
 // when user places an order
 exports.postOrder = async (request, response, next) => {
 
-  console.log("In post ORDER====================");
+  console.log("In post ORDER");
   const userId = request.body.userId;
 
   const orderDataCollection = mongoose.model("order", orderSchema, "orders");

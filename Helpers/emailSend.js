@@ -3,7 +3,6 @@ var smtpTransport = require("nodemailer-smtp-transport");
 
 const sendMails = function (mailList,subject,html) {
 
-  console.log("Generated otp is:",html);
   let mailTransporter = nodemailer.createTransport(
     smtpTransport({
       host: "172.27.172.202",

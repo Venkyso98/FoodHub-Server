@@ -7,7 +7,6 @@ const auth = require("../Helpers/authApi");
 exports.getCart = async (request, response, next) => {
 
   const userId = request.body.userId;
-  // console.log("User ID", userId);
   const userDataCollection = mongoose.model("user", userSchema, "users");
   const restaurantDataCollection = mongoose.model(
     "restaurant",
