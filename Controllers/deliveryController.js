@@ -86,12 +86,12 @@ exports.changeOrderStatus = async (request, response, next) => {
       })
     } else if (orderData.orderStatus == "Out For Delivery") {
       // Order status is already in out for delivery
-      response.status(200).json({
+      response.status(400).json({
         message: "Order status is already in out for delivery"
       })
     } else {
       // Order is not Accepted by you
-      response.status(200).json({
+      response.status(400).json({
         message: "Order is not Accepted by you"
       })
     }
@@ -106,25 +106,24 @@ exports.changeOrderStatus = async (request, response, next) => {
         })
       } else {
         // Otp is not valid
-        response.status(200).json({
+        response.status(400).json({
           message: "Otp is not valid"
         })
       }
     } else if (orderData.orderStatus == "Completed") {
       // order is already completed
-      response.status(200).json({
+      response.status(400).json({
         message: "Order is already completed"
       })
     } else {
       // Order is not for out for delivery
-      response.status(200).json({
+      response.status(400).json({
         message: "Order is not for out for delivery"
       })
     }
   }
   // response.json(orderData);
 };
-
 // get order which is accepted by delivery executive
 exports.getOrderDetailAcceptedByDeliveryExecutive = async (request, response, next) => {
   const deliverExecutiveId = request.body.userId;
