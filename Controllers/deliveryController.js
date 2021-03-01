@@ -39,19 +39,19 @@ exports.addDeliveryExecutive = async (request, response, next) => {
           message: "you have accepted the order"
         })
       } else {
-        response.status(200).json({
+        response.status(400).json({
           message: "someone already accepted the order"
         });
         // Show message to delivery Executive that someone already accepted the order
       }
     } else {
-      response.status(200).json({
+      response.status(400).json({
         message: "you have already accepted one order"
       })
       // Show message to delivery Executive that you have already accepted one order
     }
   } else {
-    response.status(200).json({
+    response.status(400).json({
       message: "order is cancelled you can't accept it"
     })
     // show message to delivery Executive that order is cancelled you can't accept it
