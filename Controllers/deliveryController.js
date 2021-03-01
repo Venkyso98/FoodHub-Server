@@ -32,10 +32,10 @@ exports.addDeliveryExecutive = async (request, response, next) => {
       if (orderData.orderStatus == "Placed") {
         orderData.addDeliveryExecutive(deliverExecutiveUserId);
         deliveryExecutiveData.changeDeliveryExecutiveStatus();
-        const userData=await userDataCollection.findById({_id:orderData.userId},'email');
-        console.log("userData for email",userData);
-        const html=orderData.orderOtp;
-        console.log("html ",html)
+        const userData = await userDataCollection.findById({ _id: orderData.userId }, 'email');
+        console.log("userData for email", userData);
+        const html = orderData.orderOtp;
+        console.log("html ", html)
         sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
         response.status(200).json({
           message: "you have accepted the order"
@@ -59,11 +59,11 @@ exports.addDeliveryExecutive = async (request, response, next) => {
     // show message to delivery Executive that order is cancelled you can't accept it
   }
 
-  
+
 };
 
 exports.changeOrderStatus = async (request, response, next) => {
-  
+
   const deliverExecutiveUserId = request.body.userId;
   const orderId = request.body.orderId;
   const orderStatus = request.body.orderStatus;
@@ -131,20 +131,20 @@ exports.getOrderDetailAcceptedByDeliveryExecutive = async (request, response, ne
   try {
     const orderData = await orderDataCollection.findOne({
       $and: [{
-          deliveryExecutive: mongoose.Types.ObjectId(deliverExecutiveId)
+        deliveryExecutive: mongoose.Types.ObjectId(deliverExecutiveId)
+      },
+      {
+        $or: [{
+          orderStatus: "Accepted"
         },
         {
-          $or: [{
-              orderStatus: "Accepted"
-            },
-            {
-              orderStatus: "Out For Delivery"
-            },
-          ],
+          orderStatus: "Out For Delivery"
         },
+        ],
+      },
       ],
     });
-    if (orderData==null || orderData==undefined) {
+    if (orderData == null || orderData == undefined) {
       response
         .status(200)
         .json({
@@ -167,11 +167,11 @@ exports.getDeliveryExecutivePastOrders = async (request, response, next) => {
   try {
     const orderData = await orderDataCollection.find({
       $and: [{
-          deliveryExecutive: mongoose.Types.ObjectId(deliverExecutiveId)
-        },
-        {
-          orderStatus: "Completed"
-        }
+        deliveryExecutive: mongoose.Types.ObjectId(deliverExecutiveId)
+      },
+      {
+        orderStatus: "Completed"
+      }
       ],
     });
     if (orderData.length == 0) {
@@ -190,3 +190,63 @@ exports.getDeliveryExecutivePastOrders = async (request, response, next) => {
     });
   }
 }
+
+exports.countNumberOfRestaurantOrderByDeliverExecutive = async (request, response, next) => {
+  // const deliverExecutiveId = "603b28a045301657d08a7f47";
+  const deliverExecutiveId = request.body.userId;
+  const orderDataCollection = mongoose.model("order", orderSchema, "orders");
+
+  const deliveryExecutiveChartData = await orderDataCollection.aggregate([
+    {
+      "$match":
+      {
+        "deliveryExecutive": mongoose.Types.ObjectId(deliverExecutiveId),
+        "orderStatus": "Completed"
+      }
+    },
+    {
+      $group:
+      {
+        _id: "$restaurantDetails.restaurantName",
+        count: { $sum: 1 }
+      }
+    }
+  ])
+  console.log(deliveryExecutiveChartData);
+  response.json(deliveryExecutiveChartData);
+  // const deliverExecutiveId = request.body.userId;
+}
+
+exports.monthlyBasedRatingForDeliveryExecutive = async (request, response, next) => {
+  const deliverExecutiveId = "603b28a045301657d08a7f47";
+  //  const deliverExecutiveId = request.body.userId;
+  const monthsArray = [
+    ['January',0],
+    [ 'February',0],
+  ['March',0], 
+  ['April',0],
+  ['May',0],
+  ['June',0],
+  ['July',0], ['August',0]
+  ['September',0],['October',0],['November',0],['December',0]]
+
+  const userDataCollection = mongoose.model("user", userSchema, "users");
+  const deliveryExecutiveChartData = await userDataCollection.findById(
+    {
+      _id: mongoose.Types.ObjectId(deliverExecutiveId),
+    },'deliveryExecutive.deliveryExecutiveRatings'
+  )
+  // console.log(deliveryExecutiveChartData.deliveryExecutive.deliveryExecutiveRatings)
+  console.log(new Date().getYear());
+  deliveryExecutiveChartData.deliveryExecutive.deliveryExecutiveRatings.forEach((rate)=>{
+    if(new Date(rate.ratingDateTime).getYear()>=new Date().getYear()){
+      monthsArray[new Date(rate.ratingDateTime).getMonth()][1]+=rate.rating;
+    }
+  })
+  console.log(monthsArray);
+  //   deliveryExecutiveChartData.deliveryExecutive.deliveryExecutiveRating.forEach((rate)=>{
+  //     console.log(rate)
+  //   })
+  response.json(monthsArray);
+}
+
