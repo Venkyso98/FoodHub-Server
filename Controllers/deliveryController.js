@@ -34,7 +34,7 @@ exports.addDeliveryExecutive = async (request, response, next) => {
         deliveryExecutiveData.changeDeliveryExecutiveStatus();
         const userData = await userDataCollection.findById({ _id: orderData.userId }, 'email');
         console.log("userData for email", userData);
-        const html = orderData.orderOtp;
+        const html = orderData.orderOtp.toString();
         console.log("html ", html)
         sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
         response.status(200).json({

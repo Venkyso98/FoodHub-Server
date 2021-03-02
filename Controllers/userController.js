@@ -48,10 +48,10 @@ exports.postUser = async (request, response, next) => {
   normalUser
     .save((err, res) => {
       if (err) {
-        //console.log(err);
-        response.status(200).json({ message: "User is already exists with this email!!" });
+        console.log("erreowqkpeowoek",err);
+        response.status(400).json({ message: "User is already exists with this email!!" });
       }
-      //console.log(res);
+      console.log(res);
       response.status(201).json({ message: "User Created Successfully" });
     })
 };

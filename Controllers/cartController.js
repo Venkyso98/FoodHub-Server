@@ -21,7 +21,7 @@ exports.getCart = async (request, response, next) => {
     cartData.cart.restaurantId == null ||
     cartData.cart.restaurantId == undefined
   ) {
-    console.log("Restaurant Id in if cart", cartData.cart.restaurantId);
+    // console.log("Restaurant Id in if cart", cartData.cart.restaurantId);
     response.status(200).json({ message: "Your Cart is Empty" });
 
   } else {
