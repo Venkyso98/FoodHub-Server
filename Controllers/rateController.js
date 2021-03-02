@@ -17,35 +17,41 @@ exports.addRatingToDeliveryExecutive = async (request, response, next) => {
         rating: rating,
         ratingReview: ratingReview,
     }
-    const ratingData = await userDataCollection.findByIdAndUpdate({_id:deliveryExecutiveId},
+    const ratingData = await userDataCollection.findByIdAndUpdate({ _id: deliveryExecutiveId },
         { $push: { "deliveryExecutive.deliveryExecutiveRatings": ratingObj } })
-    response.json(ratingData);    
+    response.json(ratingData);
 }
 
 
 exports.addRatingToFood = async (request, response, next) => {
-    auth.authApi(request, response, next);
-    const userId = request.body.userId;
-    const foodId = request.body.foodId;
-    const restaurantId = request.body.restaurantId;
+    const userId = req.body.userId;
+    const restaurantId = req.body.restaurantId;
     const rating = request.body.rating;
     const ratingReview = request.body.ratingReview;
-    const ratingObj = {
+    const foodId = req.body.foodList.map((item) => {
+        return item.foodItem._id;
+    });
+    const foodRating = {
         userId: userId,
         rating: rating,
         ratingReview: ratingReview,
     }
-    const ratingData = await restaurantDataCollection.findOneAndUpdate(
-        {$and:[{
-            _id: mongoose.Types.ObjectId(restaurantId)},{
-            "menuDetails._id": mongoose.Types.ObjectId(foodId)
-        }]},
-        { $push: { "menuDetails.$.foodRating": ratingObj } }
-    );
-    response.json(ratingData);
+    let result;
+    await foodId.forEach(async (value) => {
+        result = await restaurantDataCollection.findOneAndUpdate(
+            {
+                $and: [{
+                    _id: mongoose.Types.ObjectId(restaurantId)
+                }, {
+                    "menuDetails._id": mongoose.Types.ObjectId(value)
+                }]
+            },
+            { $push: { "menuDetails.$.foodRating": foodRating } }
+        );
+    })
 }
+
 exports.addRatingToRestaurant = async (request, response, next) => {
-    auth.authApi(request, response, next);
     console.log("ratingRating")
     const userId = request.body.userId;
     const restaurantId = mongoose.Types.ObjectId(request.body.restaurantId);
@@ -56,7 +62,7 @@ exports.addRatingToRestaurant = async (request, response, next) => {
         rating: rating,
         ratingReview: ratingReview,
     }
-    console.log("ratingRating",ratingObj)
+    console.log("ratingRating", ratingObj)
     const ratingData = await restaurantDataCollection.findByIdAndUpdate({ _id: restaurantId }, { $push: { restaurantRatings: ratingObj } })
     response.json(ratingData);
 }
