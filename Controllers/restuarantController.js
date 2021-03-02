@@ -134,87 +134,89 @@ exports.getTopRestaurants = (req, res, next) => {
 
 exports.searchRestaurants = async (req, res, next) => {
   let search = req.query.search;
-  let city = req.query.city;
-  let searchRestaurants
-  let searchRegex, cityregex;
-  const restaurantDataCollection = mongoose.model(
-    "restaurant",
-    restaurantSchema,
-    "restaurants"
-  );
-  if (search == '') {
-      // searchRestaurants = await restaurantDataCollection.find({ 'restaurantLocation.city': city });
-      searchRegex = new RegExp('^');
-  }
-  else {
-      searchRegex = new RegExp(search);
-  }
-  if (city == '') {
-      cityregex = new RegExp('^');
-  }
-  else {
-      cityregex = new RegExp(city);
-  }
-  try {
-      searchRestaurants = await restaurantDataCollection.aggregate([{
-          $match: {
-              $and: [
-                  {
-                      'restaurantLocation.city': { $regex: cityregex, $options: 'i' }
-                  },
-                  {
-                      $or: [
-                          {
-                              'restaurantName': {
-                                  $regex: searchRegex,
-                                  $options: 'i'
-                              }
-                          }
-                          ,
-                          {
-                              'restaurantCategory': {
-                                  $regex: searchRegex,
-                                  $options: 'i'
-                              }
-                          },
-                          {
-                              'menuDetails.foodName': {
-                                  $regex: searchRegex,
-                                  $options: 'i'
-                              }
-                          },
-                          {
-                              'menuDetails.foodCategory': {
-                                  $regex: searchRegex,
-                                  $options: 'i'
-                              }
-                          }
-                      ]
-                  }
-              ]
-          }
-      },{
-        "$addFields": {
-            "rating_avg": {
-                "$avg": {
-                    "$map": {
-                        "input": "$restaurantRatings",
-                        "as": "restRating",
-                        "in": "$$restRating.rating"
+    let city = req.query.city;
+    let searchRestaurants
+    let searchRegex, cityregex;
+    const restaurantDataCollection = mongoose.model(
+      "restaurant",
+      restaurantSchema,
+      "restaurants"
+    );
+    if (search == '') {
+        // searchRestaurants = await restaurantDataCollection.find({ 'restaurantLocation.city': city });
+        searchRegex = new RegExp('^');
+    }
+    else {
+        searchRegex = new RegExp(search);
+    }
+    if (city == '') {
+        cityregex = new RegExp('^');
+    }
+    else {
+        cityregex = new RegExp(city);
+    }
+    try {
+        searchRestaurants = await restaurantDataCollection.aggregate([
+            {
+                '$addFields': {
+                    "rating_avg": {
+                        "$avg": {
+                            "$map": {
+                                "input": "$restaurantRatings",
+                                "as": "restRating",
+                                "in": "$$restRating.rating"
+                            }
+                        }
                     }
                 }
-            }
-        }
-    },
-    { "$sort": { "rating_avg": -1 } }])
-      res.send(searchRestaurants);
-  }
-  catch (err) {
-      res.send(err)
-  }
-  // .catch((err) => {
-  //     res.send(err)
-  // });
-  // let searchRestaurants= await restaurantDataCollection.aggregate([{"search city":{$in:[city,'$restaurantLocation.city']}}]).exec(function(err,data){
-  // console.log(searchRestaurants);
+            },
+            {
+                $match: {
+                    $and: [
+                        {
+                            'restaurantLocation.city': { $regex: cityregex, $options: 'i' }
+                        },
+                        {
+                            $or: [
+                                {
+                                    'restaurantName': {
+                                        $regex: searchRegex,
+                                        $options: 'i'
+                                    }
+                                }
+                                ,
+                                {
+                                    'restaurantCategory': {
+                                        $regex: searchRegex,
+                                        $options: 'i'
+                                    }
+                                },
+                                {
+                                    'menuDetails.foodName': {
+                                        $regex: searchRegex,
+                                        $options: 'i'
+                                    }
+                                },
+                                {
+                                    'menuDetails.foodCategory': {
+                                        $regex: searchRegex,
+                                        $options: 'i'
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+        ]);
+        res.send(searchRestaurants);
+    }
+    catch (err) {
+        res.send(err)
+    }
+    // .catch((err) => {
+    //     res.send(err)
+    // });
+    // let searchRestaurants= await restaurantDataCollection.aggregate([{"search city":{$in:[city,'$restaurantLocation.city']}}]).exec(function(err,data){
+    // console.log(searchRestaurants);
 }
