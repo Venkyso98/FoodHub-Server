@@ -2,6 +2,7 @@
 const { request, response } = require("express");
 const mongoose = require("mongoose");
 const userSchema = require("../Models/userModel");
+const orderSchema =require("../Models/orderModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const otpGenerator = require("otp-generator");
@@ -165,4 +166,32 @@ exports.resetPassword = async (request, response, next) => {
   } else {
     response.status(200).json({ message: "Your Password is not reset successfully" });
   }
+}
+
+exports.countNumberOfRestaurantOrderByUser = async(request,response,next)=>{
+  const userId = request.body.userId;
+  const orderDataCollection = mongoose.model("order", orderSchema, "orders");
+
+  const deliveryExecutiveChartData = await orderDataCollection.aggregate([
+    {
+      "$match":
+      {
+        "userId": mongoose.Types.ObjectId(userId),
+        "orderStatus": "Completed"
+      }
+    },
+    {
+      $group:
+      {
+        _id: "$restaurantDetails.restaurantName",
+        count: { $sum: 1 }
+      }
+    }
+  ])
+  let chartData=[];
+  deliveryExecutiveChartData.forEach((data,index)=>{
+    chartData.push([data._id,data.count]);
+  })
+  console.log(chartData);
+  response.json(chartData);
 }

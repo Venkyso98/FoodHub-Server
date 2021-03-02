@@ -10,5 +10,6 @@ router.post("/adddeliveryexecutive",auth.authAPI,deliveryController.addDeliveryE
 router.post("/changeorderstatus",auth.authAPI,deliveryController.changeOrderStatus);
 router.get("/getorderdetailacceptedbydeliveryexecutive", auth.authAPI,deliveryController.getOrderDetailAcceptedByDeliveryExecutive);
 router.get("/getdeliveryexecutivepastorders", auth.authAPI,deliveryController.getDeliveryExecutivePastOrders);
-
+router.get("/countnumberofrestaurantorderbydeliverexecutive",auth.authAPI,deliveryController.countNumberOfRestaurantOrderByDeliverExecutive);
+router.get("/monthlybasedratingfordeliveryexecutive",auth.authAPI,deliveryController.monthlyBasedRatingForDeliveryExecutive)
 module.exports = router;

@@ -15,7 +15,7 @@ router.post("/sendotpforforgotpassword",userController.sendOtpForForgotPassword)
 router.post("/resetpassword",userController.resetPassword);
 router.get("/getuser",auth.authAPI,userController.getUser);
 router.post("/updateprofile",auth.authAPI,userController.updateProfile);
-
+router.get("/countnumberofrestaurantorderbyuser",auth.authAPI,userController.countNumberOfRestaurantOrderByUser);
 // router.get('/current',authorize(), getCurrent);
 // router.get("/:id", authorize(), getById);
 // router.post("/cart",userController.postCart);
