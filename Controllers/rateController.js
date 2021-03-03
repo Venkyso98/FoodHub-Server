@@ -24,11 +24,12 @@ exports.addRatingToDeliveryExecutive = async (request, response, next) => {
 
 
 exports.addRatingToFood = async (request, response, next) => {
-    const userId = req.body.userId;
-    const restaurantId = req.body.restaurantId;
+    const userId = request.body.userId;
+    const restaurantId = request.body.restaurantId;
     const rating = request.body.rating;
     const ratingReview = request.body.ratingReview;
-    const foodId = req.body.foodList.map((item) => {
+    console.log("restaurrantId",restaurantId);
+    const foodId = request.body.foodList.map((item) => {
         return item.foodItem._id;
     });
     const foodRating = {
@@ -36,6 +37,9 @@ exports.addRatingToFood = async (request, response, next) => {
         rating: rating,
         ratingReview: ratingReview,
     }
+    // console.log(foodRating);
+    // console.log(request.body.foodList);
+    console.log("foodId",foodId)
     let result;
     await foodId.forEach(async (value) => {
         result = await restaurantDataCollection.findOneAndUpdate(
@@ -48,7 +52,9 @@ exports.addRatingToFood = async (request, response, next) => {
             },
             { $push: { "menuDetails.$.foodRating": foodRating } }
         );
+        // console.log("Result",result);
     })
+
 }
 
 exports.addRatingToRestaurant = async (request, response, next) => {

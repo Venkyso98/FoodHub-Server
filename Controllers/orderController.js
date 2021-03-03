@@ -58,6 +58,7 @@ exports.postOrder = async (request, response, next) => {
       var temp = foodListCart.find((food1) => {
         return food1.foodId.toString() == food._id.toString();
       });
+      console.log("food",food);
       if (temp != undefined) {
         orderFoodList.push({
           foodItem: food,

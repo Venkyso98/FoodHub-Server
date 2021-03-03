@@ -34,7 +34,30 @@ exports.addDeliveryExecutive = async (request, response, next) => {
         deliveryExecutiveData.changeDeliveryExecutiveStatus();
         const userData = await userDataCollection.findById({ _id: orderData.userId }, 'email');
         console.log("userData for email", userData);
-        const html = orderData.orderOtp.toString();
+        // const html = orderData.orderOtp.toString();
+        const html=`<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body style="background-color:#faf8f4; text-align: center;">
+            <div >
+                <img src = "https://files.slack.com/files-pri/T01KZ8MM4BY-F01PCQ4D5MK/chef.png" alt="" style="height:400px"></img> 
+             </div>
+             <div style= "font-size: 20px;">
+             Dear Customer,<br><br>
+             Thank you for being our valued customer. We are grateful for the pleasure of serving you and hope we met your expectations.<br><br>
+             You have made an order for which One Time Passsword (OTP) is:<br><br>
+             <div style="color:red ; font-size: 100px; font-weight: bold; ">
+                ${orderData.orderOtp.toString()}
+             </div>
+             <br>
+             In case you have any query, please call our Customer Care. You can also write an email at @foodPlaza.com.<br><br>
+             </div>
+        </body>
+        </html>`
         console.log("html ", html)
         sendEmail.sendMails([userData.email], "Foodizz Order otp", html);
         response.status(200).json({

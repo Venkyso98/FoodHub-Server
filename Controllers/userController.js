@@ -131,8 +131,8 @@ exports.sendOtpForForgotPassword = async (request, response, next) => {
          </div>
          <div style= "font-size: 20px;">
          Dear Customer,<br><br>
-         Thank you for being our valued customer. We are grateful for the pleasure of serving you and hope we met your expectations.<br><br>
-         You have made an order for which One Time Passsword (OTP) is:<br><br>
+         
+         One Time Passsword (OTP) for Forgot Password request is as below:<br><br>
          <div style="color:red ; font-size: 100px; font-weight: bold; ">
             ${generatedForgotPasswordOtp}
          </div>
